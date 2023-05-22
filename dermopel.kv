@@ -1,0 +1,1822 @@
+#:import utils kivy.utils
+#:import NoTransition kivy.uix.screenmanager.NoTransition
+#:import CardTransition kivy.uix.screenmanager.CardTransition
+#:import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+#:import Factory kivy.factory.Factory
+#:import Color kivy.graphics.Color
+
+Display:
+
+<Display>:
+    ScreenManager:
+        transition: NoTransition()
+        id: DermoScreens
+        StartScreen:
+        PatientScreen:
+        DoctorScreen:
+        EntryScreen:
+        CameraScreen:
+        SignupScreen:
+        LoginScreen:
+        ProfileScreen:
+        #DoctorProfileScreen:
+        ProfileSelectionScreen:
+        SettingsScreen:
+
+#-----------------------------------------------------
+#Screens
+#-----------------------------------------------------
+
+<StartScreen@Screen>
+    name: 'startscreen'
+    BoxLayout:
+        orientation: "vertical"
+        LogoTopBar:
+        Welcome:
+
+<PatientScreen>
+    #Hier Screen, da PatientScreen durch Screenmanager ansteuerbar sein soll.
+    name: 'patientscreen'
+    id: patientscreen
+    BoxLayout:
+        orientation: "vertical"
+        Top_PatientAndDoctorScreen:
+        Middle_PatientScreen:
+        Bottom_PatientScreen:
+
+<DoctorScreen>
+    name: 'doctorscreen'
+    BoxLayout:
+        orientation: "vertical"
+        Top_PatientAndDoctorScreen:
+        Middle_DoctorScreen:
+        Bottom_PatientScreen:
+
+<EntryScreen>
+    name: 'entryscreen'
+    canvas.before:
+        Color:
+            #rgba: utils.get_color_from_hex('#D8D8D8')
+            rgba: app.greyblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        orientation: "vertical"
+        EntryBottom:
+        EntryBar:
+        #ScrollEntry:
+
+<CameraScreen>
+    name: 'camerascreen'
+    EntryCamera:
+
+<ProfileScreen>
+    name: 'profilescreen'
+    canvas.before:
+        Color:
+            rgba: app.greyblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        orientation: "vertical"
+        ProfileBar:
+        ProfileInfo:
+        TopBar:
+            topbarhomebuttonplacement: "left"
+            transitiondirection: 'right'
+
+#<DoctorProfileScreen@Screen>
+#    name: 'doctorprofilescreen'
+#    canvas.before:
+#        Color:
+#            rgba: app.greyblue
+#        Rectangle:
+#            size: self.size
+#            pos: self.pos
+#    BoxLayout:
+#        orientation: "vertical"
+#        ProfileBar:
+#        ProfileInfo:
+#        TopBar:
+#            topbarhomebuttonplacement: "left"
+#            transitiondirection: 'right'
+
+<ProfileSelectionScreen@Screen>
+    name: 'profileselectionscreen'
+    Profiles:
+
+<LoginScreen>
+    name: 'loginscreen'
+    canvas.before:
+        Color:
+            rgba: app.greyblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        orientation: "vertical"
+        LogoTopBar:
+        Login:
+        Bottom_Userscreens:
+            returnbuttonplacement: 'right'
+            transitiondirection: 'left'
+
+<SignupScreen@Screen>
+    name: 'signupscreen'
+    canvas.before:
+        Color:
+            rgba: app.greyblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        orientation: "vertical"
+        LogoTopBar:
+        SignUp:
+        Bottom_Userscreens:
+            returnbuttonplacement: 'left'
+            transitiondirection: 'right'
+
+<SettingsScreen@Screen>
+    name: 'settingsscreen'
+    canvas.before:
+        Color:
+            rgba: app.greyblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        orientation: "vertical"
+        TopBar:
+            topbarhomebuttonplacement: "right"
+            transitiondirection: 'left'
+        Setting:
+
+#-----------------------------------------------------
+#Content
+#-----------------------------------------------------
+#<EntryCamera>
+#    orientation: 'vertical'
+#    padding: "10dp"
+#    Camera:
+#        id: entrycam
+#        #resolution: (800, 800)
+#    Button:
+#        size_hint: None, None
+#        size: "100dp", "100dp"
+#        pos_hint: {"center_x": .5}
+#        border: (0, 0, 0, 0)
+#        background_normal: "Images/New_Protocoll_Down_DermoPEL.png"
+#        background_down: "Images/New_Protocoll_DermoPEL.png"
+#        on_release: root.on_takepicture(self)
+
+<Welcome@BoxLayout>
+    #Hier kommt die Begrüßungsnachricht, welche bei öffnen der App aufgerufen wird.
+    #rgba: utils.get_color_from_hex('#D8D8D8')
+    orientation: 'vertical'
+    #spacing: "10dp"
+    canvas.before:
+        Color:
+            #rgba: utils.get_color_from_hex('#D8D8D8')
+            rgba: app.lightblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Label:
+        text_size: self.size
+        halign: 'center'
+        valign: 'top'
+        font_size: "60dp"
+        color: app.darkblue
+        text: "Welcome to DermoPEL!"
+        bold: True
+    Label:
+        text_size: self.size
+        halign: 'center'
+        valign: 'top'
+        #size_hint_y: None
+        #text_size: self.width, None
+        #height: self.texture_size[1]
+        #pos_hint: {"center_y": 0.5}
+        font_size: "30dp"
+        color: app.darkblue
+        text: "DermoPEL is an app, which is used to protocol all types of dermatological problems. It allows for a central place for medical data."
+    AnchorLayout:
+        anchor_y: 'center'
+        BoxLayout:
+            size_hint: .6, .35
+            spacing: "40dp"
+            Button:
+                background: ''
+                background_color: app.darkblue
+                font_size: "20dp"
+                text: "login"
+                on_release:
+                    app.root.ids.DermoScreens.transition = CardTransition()
+                    app.root.ids.DermoScreens.transition.direction = 'right'
+                    app.root.ids.DermoScreens.current = 'loginscreen'
+            Button:
+                background: ''
+                background_color: app.darkblue
+                font_size: "20dp"
+                text: "sign up"
+                on_release:
+                    app.root.ids.DermoScreens.transition = CardTransition()
+                    app.root.ids.DermoScreens.transition.direction = 'left'
+                    app.root.ids.DermoScreens.current = 'signupscreen'
+
+<Top_PatientAndDoctorScreen>
+    padding: ("5dp", "25dp", "5dp", "25dp")
+    size_hint: 1, None
+    height: "70dp"
+    #screen: 'profilescreen' if not app.isdoctor else 'doctorprofilescreen'
+    #logoplace: 'left' if not app.isdoctor else 'center'
+    #trans: (0, 0, 0, 0)
+    profileimg: "Images/User_DermoPEL.png" if not app.isdoctor else "Images/Logout_DermoPEL.png"
+    profileimgdown: "Images/User_Down_DermoPEL.png" if not app.isdoctor else "Images/Logout_Down_DermoPEL.png"
+    canvas.before:
+        Color:
+            #rgba: utils.get_color_from_hex('#D8D8D8')
+            rgba: app.lightblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+            #radius: [(0), (0), (20), (20)]
+    #canvas.before:
+    #    Color:
+    #        rgba: 1, 1, 1, 1
+    #    Rectangle:
+    #        size: self.size
+    #        pos: self.pos
+    AnchorLayout:
+        #size_hint_x: 0.5
+        #anchor_x: root.logoplace if not app.istreating else 'left'
+        anchor_x: 'left'
+        anchor_y: "center"
+        Button:
+            background_normal: "Images/Logo_DermoPEL.png"
+            background: ''
+            background_down: "Images/Logo_DermoPEL.png"
+            border: 0, 0, 0, 0
+            size_hint: None, None
+            size: "350dp", "50dp"
+            on_release: root.easter_egg(self)
+            #allow_stretch: True
+            #size_hint: None, None
+            #size: self.texture_size
+            #size_hint: 1, None
+            #height: "20dp"
+    AnchorLayout:
+        #size_hint_x: 0.5
+        anchor_x: "right"
+        anchor_y: "center"
+        Button:
+            size_hint: None, None
+            size: "50dp", "50dp"
+            #Border muss auf 0 gesetzt werden, um Stretch zu verhindern.
+            border: (0, 0, 0, 0)
+            background_normal: root.profileimg if not app.istreating else "Images/Patient_Info_DermoPEL.png"
+            #es fehlt background_down
+            background_down: root.profileimgdown if not app.istreating else "Images/Patient_Info_Down_DermoPEL.png"
+            #background_color: root.trans if not app.istreating else (1, 1, 1, 1)
+            on_release: root.on_release_profile(self)
+            #Image:
+            #    source: "Images/User_DermoPEL.png"
+            #    size_hint: None, None
+            #    size: "50dp", "50dp"
+            #    pos: self.parent.x, self.parent.y
+                #allow_stretch: True
+                #size_hint: None, None
+                #size: self.texture_size
+
+<Middle_PatientScreen@ScrollView>
+    #Hier Scrollview, da man durch Protokolle scrollen soll.
+    id: middlepatientscreen
+    canvas.before:
+        Color:
+            rgba: app.greyblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        size_hint_y: None
+        height: self.minimum_height
+        Widget:
+            size_hint: None, 1
+            width: "0dp"
+        Protocol:
+            size_hint: 1, None
+            #Scrollt automatisch bis ende der Seite:
+            height: self.minimum_height
+        Widget:
+            size_hint: None, 1
+            width: "0dp"
+
+<Protocol>
+    id: protocolstack
+    pos_hint: {'center_x': 0.5, 'top': 1}
+    #Hier kein bzw. nicht viel code, da Protocolle Dynamisch erzeugt werden, in main.py
+    #padding: ("20dp", "20dp", "20dp", "20dp")
+    #spacing: "20dp", "20dp"
+
+
+<ScrollEntry@ScrollView>
+    Entry:
+        size_hint: 1, None
+        #Scrollt automatisch bis ende der Seite:
+        height: self.minimum_height
+
+<Entry>
+    id: entryview
+    padding: "20dp"
+    orientation: "vertical"
+    size_hint: .75, 1
+    pos_hint: {"center_x":.5}
+    halign: "center"
+    spacing: "10dp"
+    Label:
+        text_size: self.size
+        size_hint: 1, None
+        height: "85dp"
+        #size_hint: .5, 1
+        halign: "center"
+        valign: "top"
+        font_size: "35dp"
+        color: app.darkblue
+        bold: True
+    Widget:
+        size_hint: 1, None
+        height: "1dp"
+        canvas:
+            Color:
+                rgba: app.darkblue
+            Rectangle:
+                pos: self.pos
+                size: self.size
+    Widget:
+        size_hint: 1, None
+        height: "10dp"
+    Label:
+        text_size: self.size
+        size_hint: 1, None
+        height: "30dp"
+        halign: "center"
+        font_size: "20dp"
+        text: "Picture?"
+        color: app.darkblue
+        bold: True
+    Button:
+        id: pic_button
+        size_hint: 1, None
+        height: self.width
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: self.x, self.y, self.width, self.height
+        #height: "400dp"
+        halign: "center"
+        background_normal: 'Images/New_Pic_DermoPEL.png'
+        background_down: 'Images/New_Pic_Down_DermoPEL.png'
+        on_release: root.on_currentryprint(self)
+    BoxLayout:
+        size_hint: 1, None
+        height: self.minimum_height
+        Label:
+            text_size: self.size
+            size_hint: 1, None
+            height: "30dp"
+            halign: "center"
+            font_size: "20dp"
+            text: "Pain"
+            color: app.darkblue
+            bold: True
+        Slider:
+            size_hint: 1, None
+            height: "30dp"
+            id: painslider
+            min: 0
+            max: 10
+            value: 5
+    BoxLayout:
+        TextInput:
+            # Hier fehlt textinputfilter für float!!
+            id: entry_diameterboxs
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "20dp"
+            cursor_color: app.greyblue
+            #cursor_color: app.darkblue
+            multiline: False
+            hint_text: "diameter?"
+
+<EntryBottom@MDTabs>
+    id: EntryTabs
+    pos_hint: {'top': 0}
+    background_color: app.lightblue
+    text_color_normal: app.darkblue
+    text_color_active: 0, .1, .2, 1
+    #underline_color: app.darkblue
+    indicator_color: 0, .1, .2, 1
+    #color_indicator: 0, .1, .2, 1
+    #tab_width_mode: 'stretch'
+    #tab_indicator_type: 'line-round'
+    tab_hint_x: True
+    allow_stretch: True
+    tab_bar_height: "65dp"
+    PictureTab:
+        title: "Picture"
+    PainTab:
+        title: "State"
+    NotesTab:
+        title: "Notes"
+
+<PictureTab>
+    padding: "20dp"
+    orientation: "vertical"
+    pos_hint: {"center_x":.5}
+    halign: "center"
+    valign: "middle"
+    spacing: "40dp"
+    Button:
+        id: pic_button
+        size_hint: 1, None
+        height: self.width
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: self.x, self.y, self.width, self.height
+        #height: "400dp"
+        halign: "center"
+        background_normal: 'Images/New_Pic_DermoPEL.png'
+        background_down: 'Images/New_Pic_Down_DermoPEL.png'
+        background_disabled_normal: self.background_normal
+        on_release: root.on_new_picture(self)
+    BoxLayout:
+        size_hint: .75, 1
+        pos_hint: {"center_x": .5}
+        LimitInput:
+            id: datebox
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "20dp"
+            cursor_color: app.greyblue
+            #cursor_color: app.darkblue
+            multiline: False
+            hint_text: "date?"
+            background: ''
+            background_color: app.lightblue
+            limit: 12
+        Button:
+            size_hint: None, None
+            size: "38dp", "38dp"
+            border: (0, 0, 0, 0)
+            background_normal: "Images/Date_DermoPEL.png"
+            background_down: "Images/Date_Down_DermoPEL.png"
+            background_disabled_normal: self.background_normal
+            canvas.before:
+                Color:
+                    rgba: 0, 0, 0, 1
+                Line:
+                    width: dp(.25)
+                    rectangle: self.x, self.y, self.width, self.height
+            on_release: root.on_date_release(self)
+
+<PainTab>
+    orientation: "vertical"
+    spacing: "20dp"
+    padding: "20dp"
+    light: (.23, .34, .45, 1)
+    dark: (.01, .01, .2, 1)
+    Label:
+        id: painmeter
+        text_size: self.size
+        size_hint: 1, None
+        height: "30dp"
+        halign: "center"
+        font_size: "25dp"
+        text: "pain: 0"
+        color: app.darkblue
+        disabled_color: self.color
+        bold: True
+    Slider:
+        size_hint: .75, .5
+        pos_hint: {"center_x": .5}
+        min: 0
+        max: 10
+        step: 1
+        value_track: True
+        value_track_color: app.darkblue
+        cursor_size: "20dp", "20dp"
+        on_value: root.on_pain_change(self)
+    Label:
+        text_size: self.size
+        size_hint: 1, None
+        height: "30dp"
+        halign: "center"
+        font_size: "25dp"
+        text: "color"
+        color: app.darkblue
+        disabled_color: self.color
+        bold: True
+        #Widget:
+        #    id: colorbox
+            #size_hint: None, None
+            #size: "40dp", "40dp"
+        #    canvas.before:
+        #        Color:
+        #            rgb: utils.get_color_from_hex(root.currcolor)
+        #        RoundedRectangle:
+        #            size: self.size
+        #            pos: self.pos
+        #            radius: [(20, 20), (20, 20), (0, 0), (0, 0)]
+    Button:
+        id: colorbutton
+        size_hint: .75, .75
+        #height: "40dp"
+        background: ''
+        #background_color: utils.get_color_from_hex(root.currcolor)
+        background_color: 0, 0, 0, 0
+        text: "change" if not app.isdoctor else ''
+        color: 1, 1, 1, .5
+        font_size: "30dp"
+        pos_hint: {"center_x": .5}
+        bold: True
+        #border: (20, 20, 20, 20)
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex(root.currcolor)
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [(20, 20), (20, 20), (20, 20), (20, 20)]
+        on_release: root.on_new_color(self)
+    BoxLayout:
+        size_hint: .75, 1
+        pos_hint: {"center_x": .5}
+        spacing: "20dp"
+        BoxLayout:
+            orientation: "vertical"
+            Label:
+                text_size: self.size
+                #size_hint: 1, None
+                #height: "30dp"
+                halign: "center"
+                valign: "top"
+                font_size: "25dp"
+                text: "diameter"
+                color: app.darkblue
+                disabled_color: app.darkblue
+                isabled_color: self.color
+                bold: True
+            Button:
+                id: diameterbutton
+                size_hint: 1, None
+                height: "40dp"
+                pos_hint: {"center_x": .5}
+                background_color: 0, 0, 0, 0
+                bold: True
+                color: 1, 1, 1, .5
+                text: "change"
+                font_size: "20dp"
+                canvas.before:
+                    Color:
+                        rgba: app.darkblue  if self.state=='normal' else app.lightblue
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [(10, 10)]
+                on_release: root.on_diameter_release(self)
+            Widget:
+                size_hint_y: .5
+        BoxLayout:
+            orientation: "vertical"
+            Label:
+                text_size: self.size
+                #size_hint: 1, None
+                #height: "30dp"
+                halign: "center"
+                valign: "top"
+                font_size: "25dp"
+                text: "Anomaly"
+                color: app.darkblue
+                disabled_color: app.darkblue
+                isabled_color: self.color
+                bold: True
+            ToggleButton:
+                id: anomalybtn
+                size_hint: 1, None
+                height: "70dp"
+                background_color: 0, 0, 0, 0
+                valign: "center"
+                pos_hint: {"center_x": .5}
+                font_size: "50dp"
+                bold: True
+                canvas.before:
+                    Color:
+                        rgba: root.light if self.state=='normal' else root.dark
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [(10, 10)]
+                on_state: root.on_anomaly(self)
+            Widget:
+                size_hint_y: .375
+
+<NotesTab>
+    orientation: "vertical"
+    spacing: "20dp"
+    padding: "20dp"
+    Label:
+        text_size: self.size
+        size_hint: 1, None
+        height: "30dp"
+        halign: "center"
+        font_size: "20dp"
+        text: "Notes"
+        color: app.darkblue
+        bold: True
+    TextInput:
+        id: notesbox
+        #size_hint: 1, None
+        #height: "40dp"
+        #halign: "center"
+        font_size: "30dp"
+        cursor_color: app.greyblue
+        #cursor_color: app.darkblue
+        #multiline: False
+        hint_text: "write your comments here" if not app.isdoctor else "your patient has not left any notes."
+        background: ''
+        background_color: app.lightblue
+    Label:
+        text_size: self.size
+        size_hint: 1, None
+        height: "30dp"
+        halign: "center"
+        font_size: "20dp"
+        text: "Notes from doctor"
+        color: app.darkblue
+        bold: True
+    TextInput:
+        id: docnotesbox
+        #size_hint: 1, None
+        #height: "40dp"
+        #halign: "center"
+        font_size: "30dp"
+        cursor_color: app.greyblue
+        #cursor_color: app.darkblue
+        #multiline: False
+        hint_text: "Your doctor has not left you a note yet." if not app.isdoctor else "write your comments here"
+        background: ''
+        background_color: app.lightblue
+        readonly: True
+
+<Bottom_PatientScreen@BoxLayout>
+    padding: ("5dp", "25dp", "5dp", "15dp")
+    size_hint: 1, None
+    height: "80dp"
+    canvas.before:
+        Color:
+            rgba: app.lightblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    AnchorLayout:
+        anchor_x: "left"
+        anchor_y: "bottom"
+        Button:
+            size_hint: None, None
+            size: "50dp", "50dp"
+            border: (0, 0, 0, 0)
+            background_normal: "Images/Settings_DermoPEL.png" if not app.istreating else "Images/Return_DermoPEL.png"
+            background_down: "Images/Settings_Down_DermoPEL.png" if not app.istreating else "Images/Return_Down_DermoPEL.png"
+            on_release:
+                app.root.ids.DermoScreens.transition = CardTransition()
+                app.root.ids.DermoScreens.transition.direction = 'right'
+                app.root.ids.DermoScreens.current = 'doctorscreen' if app.istreating else 'settingsscreen'
+    Button:
+        size_hint: None, None
+        size: "50dp", "50dp"
+        border: (0, 0, 0, 0)
+        background_normal: "Images/New_Protocoll_DermoPEL.png"
+        background_down: "Images/New_Protocoll_Down_DermoPEL.png"
+        background_disabled_normal: "Images/New_Protocoll_DermoPEL.png"
+        background_disabled_down: "Images/New_Protocoll_Down_DermoPEL.png"
+        #app.root.ids.DermoScreens.current = 'patientscreen' if not app.isdoctor else 'doctorscreen'
+        disabled: False if not app.isdoctor else True
+        background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+        on_release:
+            Factory.NewProtocoll().open()
+    AnchorLayout:
+        anchor_x: "right"
+        anchor_y: "bottom"
+        Button:
+            size_hint: None, None
+            size: "50dp", "50dp"
+            border: (0, 0, 0, 0)
+            background_normal: "Images/Assistant_DermoPEL.png"
+            background_down: "Images/Assistant_Down_DermoPEL.png"
+            on_press:
+                #wenn assistant:
+                #app.root.ids.DermoScreens.current = 'assistantscreen'
+
+<Middle_DoctorScreen@BoxLayout>
+    #Hier Scrollview, da man durch Protokolle scrollen soll.
+    canvas.before:
+        Color:
+            rgba: app.greyblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    MDSwiper:
+        id: docswiper
+
+<PatientSwipeItem>
+    padding: "20dp"
+    BoxLayout:
+        #on_touch_down: root.currpattemp = root.currpat
+        #on_touch_up: root.parent.parent.parent.parent.parent.parent.on_click_patient(self)
+        padding: "20dp"
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rounded_rectangle: self.x, self.y, self.width, self.height, 20, 20, 20, 20
+        #spacing: "20dp"
+        Image:
+            source: "Images/Patient_DermoPEL.png"
+            padding: "20dp"
+        Widget:
+            size_hint_y: None
+            height: "20dp"
+        BoxLayout:
+            size_hint: 1, .25
+            canvas.before:
+                Color:
+                    rgba: app.darkblue
+                Line:
+                    width: dp(1)
+                    rounded_rectangle: self.x, self.y, self.width, self.height, 0, 0, 20, 20
+            BoxLayout:
+                orientation: "vertical"
+                canvas.before:
+                    Color:
+                        rgba: app.darkblue
+                    Line:
+                        width: dp(1)
+                        rounded_rectangle: self.x, self.y, self.width, self.height, 0, 0, 0, 20
+                Label:
+                    height: "30dp"
+                    halign: "center"
+                    font_size: "20dp"
+                    text: "first name:"
+                    color: app.darkblue
+                    #bold: True
+                Label:
+                    #text_size: self.size
+                    #size_hint: 1, None
+                    height: "30dp"
+                    halign: "center"
+                    font_size: "20dp"
+                    text: root.firstn
+                    color: app.darkblue
+                    bold: True
+            BoxLayout:
+                orientation: "vertical"
+                canvas.before:
+                    Color:
+                        rgba: app.darkblue
+                    Line:
+                        width: dp(1)
+                        rounded_rectangle: self.x, self.y, self.width, self.height, 0, 0, 20, 0
+                Label:
+                    height: "30dp"
+                    halign: "center"
+                    font_size: "20dp"
+                    text: "surname:"
+                    color: app.darkblue
+                    #bold: True
+                Label:
+                    #text_size: self.size
+                    #size_hint: 1, None
+                    height: "30dp"
+                    halign: "center"
+                    font_size: "20dp"
+                    text: root.lastn
+                    color: app.darkblue
+                    bold: True
+        BoxLayout:
+            size_hint: 1, .25
+            canvas.before:
+                Color:
+                    rgba: app.darkblue
+                Line:
+                    width: dp(1)
+                    rounded_rectangle: self.x, self.y, self.width, self.height, 20, 20, 0, 0
+            Label:
+                height: "30dp"
+                halign: "center"
+                font_size: "20dp"
+                text: "SVNR:"
+                color: app.darkblue
+                #bold: True
+            Label:
+                height: "30dp"
+                halign: "center"
+                font_size: "20dp"
+                text: root.svnr
+                color: app.darkblue
+                bold: True
+        Widget:
+            size_hint_y: None
+            height: "20dp"
+        Button:
+            size_hint: None, None
+            size: "75dp", "25dp"
+            pos_hint: {"center_x": .5}
+            background_color: 0, 0, 0, 0
+            bold: True
+            color: 1, 1, 1, .5
+            text: "select"
+            font_size: "20dp"
+            canvas.before:
+                Color:
+                    rgba: app.darkblue  if self.state=='normal' else app.lightblue
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [9]
+            on_release: root.parent.parent.parent.parent.parent.parent.on_click_patient(self)
+
+#<Bottom_DoctorScreen@BoxLayout>
+
+<PatientData>
+    orientation: "vertical"
+    padding: "20dp"
+    spacing: "10dp"
+    pos_hint: {"center_x": .5, "center_y": .5}
+    size_hint: 1, None
+    height: self.minimum_height
+    BoxLayout:
+        orientation: "vertical"
+        padding: "20dp"
+        spacing: "10dp"
+        size_hint: 1, None
+        height: self.minimum_height
+        #pos_hint: {"center_x": .5, "center_y": .5}
+        #size_hint_y: None
+        #height: self.minimum_height
+        #valign: "middle"
+        Label:
+            text_size: self.size
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "30dp"
+            text: "first name"
+            color: app.darkblue
+            valign: "center"
+            bold: True
+            pos_hint: {"center_y": .5}
+        TextInput:
+            id: firstnamebox
+            size_hint: 1, None
+            height: "50dp"
+            font_size: "30dp"
+            cursor_color: app.greyblue
+            background: ''
+            background_color: app.lightblue
+            multiline: False
+            halign: "center"
+            valign: "center"
+    BoxLayout:
+        orientation: "vertical"
+        padding: "20dp"
+        spacing: "10dp"
+        size_hint: 1, None
+        height: self.minimum_height
+        Label:
+            text_size: self.size
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "30dp"
+            text: "surname"
+            color: app.darkblue
+            valign: "center"
+            bold: True
+        TextInput:
+            id: surnamebox
+            size_hint: 1, None
+            height: "50dp"
+            font_size: "30dp"
+            cursor_color: app.greyblue
+            background: ''
+            background_color: app.lightblue
+            multiline: False
+            halign: "center"
+            valign: "center"
+    BoxLayout:
+        orientation: "vertical"
+        padding: "20dp"
+        spacing: "10dp"
+        size_hint: 1, None
+        height: self.minimum_height
+        Label:
+            text_size: self.size
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "30dp"
+            text: "SVNR"
+            color: app.darkblue
+            valign: "center"
+            bold: True
+        LimitInput:
+            id: svnrbox
+            size_hint: 1, None
+            height: "50dp"
+            font_size: "30dp"
+            cursor_color: app.greyblue
+            background: ''
+            background_color: app.lightblue
+            multiline: False
+            halign: "center"
+            valign: "center"
+            limit: 10
+    BoxLayout:
+        orientation: "vertical"
+        padding: "20dp"
+        spacing: "10dp"
+        size_hint: 1, None
+        height: self.minimum_height
+        Label:
+            text_size: self.size
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "30dp"
+            text: "birthdate"
+            color: app.darkblue
+            valign: "center"
+            bold: True
+        BoxLayout:
+            size_hint: 1, None
+            pos_hint: {"center_x": .5}
+            height: "50dp"
+            LimitInput:
+                id: birthdatebox
+                size_hint: None, None
+                height: "50dp"
+                width: svnrbox.width
+                font_size: "30dp"
+                cursor_color: app.greyblue
+                background: ''
+                background_color: app.lightblue
+                multiline: False
+                halign: "center"
+                valign: "center"
+                limit: 12
+            FloatLayout:
+                Button:
+                    size_hint: None, None
+                    size: "50dp", "50dp"
+                    border: (0, 0, 0, 0)
+                    background_normal: "Images/Date_DermoPEL.png"
+                    background_down: "Images/Date_Down_DermoPEL.png"
+                    #background_disabled_normal: self.background_normal
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Line:
+                            width: dp(.25)
+                            rectangle: self.x, self.y, self.width, self.height
+                    #pos: birthdatebox.x, self.y
+                    pos: birthdatebox.x + birthdatebox.width - self.width, birthdatebox.y
+                    on_release: root.on_date_release(self)
+    BoxLayout:
+        padding: "20dp"
+        spacing: "5dp"
+        size_hint: 1, None
+        height: self.minimum_height
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: 1, None
+            pos_hint: {"center_x": .5}
+            height: "200dp"
+            spacing: "10dp"
+            CheckBox:
+                id: allergiescheckbox
+                size_hint: None, None
+                size: "20dp", "20dp"
+                halign: "left"
+                #hier muss group stehen, um checkbox rund zu machen
+                group: '1'
+                color: app.darkblue
+                pos_hint: {"center_x": .5}
+            Label:
+                text_size: self.size
+                size_hint: 1, None
+                height: "20dp"
+                halign: "center"
+                font_size: "15dp"
+                text: "allergies"
+                color: app.darkblue
+                valign: "center"
+                bold: True
+            TextInput:
+                id: allergybox
+                size_hint: 1, None
+                height: "150dp"
+                font_size: "20dp"
+                cursor_color: app.greyblue
+                background: ''
+                background_color: app.lightblue
+                #multiline: False
+                halign: "center"
+                valign: "center"
+                text: '' if self.disabled else ''
+                disabled: False if allergiescheckbox.active else True
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: 1, None
+            pos_hint: {"center_x": .5}
+            height: "200dp"
+            spacing: "10dp"
+            CheckBox:
+                id: conditionscheckbox
+                size_hint: None, None
+                size: "20dp", "20dp"
+                halign: "left"
+                #hier muss group stehen, um checkbox rund zu machen
+                group: '2'
+                color: app.darkblue
+                pos_hint: {"center_x": .5}
+            Label:
+                text_size: self.size
+                size_hint: 1, None
+                height: "20dp"
+                halign: "center"
+                font_size: "15dp"
+                text: "preconditions"
+                color: app.darkblue
+                valign: "center"
+                bold: True
+            TextInput:
+                id: conditionbox
+                size_hint: 1, None
+                height: "150dp"
+                font_size: "20dp"
+                cursor_color: app.greyblue
+                background: ''
+                background_color: app.lightblue
+                #multiline: False
+                halign: "center"
+                valign: "center"
+                text: '' if self.disabled else ''
+                disabled: False if conditionscheckbox.active else True
+        BoxLayout:
+            orientation: "vertical"
+            size_hint: 1, None
+            pos_hint: {"center_x": .5}
+            height: "200dp"
+            spacing: "10dp"
+            CheckBox:
+                id: medicationscheckbox
+                size_hint: None, None
+                size: "20dp", "20dp"
+                halign: "left"
+                #hier muss group stehen, um checkbox rund zu machen
+                group: '3'
+                color: app.darkblue
+                pos_hint: {"center_x": .5}
+            Label:
+                text_size: self.size
+                size_hint: 1, None
+                height: "20dp"
+                halign: "center"
+                font_size: "15dp"
+                text: "medications"
+                color: app.darkblue
+                valign: "center"
+                bold: True
+            TextInput:
+                id: medicationbox
+                size_hint: 1, None
+                height: "150dp"
+                font_size: "20dp"
+                cursor_color: app.greyblue
+                background: ''
+                background_color: app.lightblue
+                #multiline: False
+                halign: "center"
+                valign: "center"
+                text: '' if self.disabled else ''
+                disabled: False if medicationscheckbox.active else True
+    BoxLayout:
+        orientation: "vertical"
+        padding: "20dp"
+        spacing: "10dp"
+        size_hint: 1, None
+        height: self.minimum_height
+        Label:
+            text_size: self.size
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "30dp"
+            text: "choose doctor"
+            color: app.darkblue
+            valign: "center"
+            bold: True
+        BoxLayout:
+            size_hint: 1, None
+            pos_hint: {"center_x": .5}
+            height: "50dp"
+            TextInput:
+                id: treatingdocbox
+                size_hint: None, None
+                height: "50dp"
+                width: svnrbox.width
+                font_size: "30dp"
+                cursor_color: app.greyblue
+                background: ''
+                background_color: app.lightblue
+                multiline: False
+                halign: "center"
+                valign: "center"
+            FloatLayout:
+                Button:
+                    size_hint: None, None
+                    size: "50dp", "50dp"
+                    border: (0, 0, 0, 0)
+                    background_normal: "Images/Search_Down_DermoPEL.png"
+                    background_down: "Images/Search_DermoPEL.png"
+                    #background_disabled_normal: self.background_normal
+                    canvas.before:
+                        Color:
+                            rgba: app.darkblue
+                        Line:
+                            width: dp(.25)
+                            rectangle: self.x, self.y, self.width, self.height
+                    pos: treatingdocbox.x + treatingdocbox.width - self.width, treatingdocbox.y
+                    on_release: root.on_search_doctor(self)
+
+<ProfileInfo@ScrollView>
+    PatientData:
+        size_hint_y: None
+        height: self.minimum_height
+        #canvas.after:
+        #    Color:
+        #        rgba: app.greyblue
+        #    Rectangle:
+        #        size: self.size
+        #        pos: self.pos
+
+<Profiles@StackLayout>
+    #Hier StackLayout, da User aneinander gereiht werden sollen.
+
+<LogoTopBar@AnchorLayout>
+    # Hier AnchorLayout, da wir wollen, dass das Bild in der mitte angeordnet wird.
+    padding: ("5dp", "25dp", "5dp", "25dp")
+    size_hint: 1, None
+    height: "70dp"
+    canvas.before:
+        Color:
+            #rgba: utils.get_color_from_hex('#D8D8D8')
+            rgba: app.lightblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    Image:
+        source: "Images/Logo_DermoPEL.png"
+        size_hint: None, None
+        size: "350dp", "50dp"
+
+<Login>
+    size_hint: .75, 1
+    pos_hint: {"center_x":.5}
+    orientation: "vertical"
+    spacing: "20dp"
+    # Um einen abstand vom logo zu haben
+    Widget:
+        size_hint: 1, .01
+    Label:
+        size_hint: 1, .65
+        text_size: self.size
+        halign: 'center'
+        valign: 'top'
+        font_size: "60dp"
+        color: app.darkblue
+        text: "Login"
+        bold: True
+    GridLayout:
+        rows: 2
+        cols: 2
+        spacing: "20dp", "30dp"
+        Image:
+            source: "Images/User_Down_DermoPEL.png"
+            size_hint: None, None
+            size: "50dp", "50dp"
+        TextInput:
+            id: login_namebox
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "20dp"
+            #zu dunkel
+            #cursor_color: app.darkblue
+            #zu hell
+            #cursor_color: app.lightblue
+            cursor_color: app.greyblue
+            multiline: False
+            hint_text: "Username?"
+            background: ''
+            background_color: app.lightblue
+            on_text_validate: root.on_login(self)
+        Image:
+            source: "Images/Password_DermoPEL.png"
+            size_hint: None, None
+            size: "50dp", "50dp"
+        TextInput:
+            id: login_passbox
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "20dp"
+            #zu dunkel
+            #cursor_color: app.darkblue
+            #zu hell
+            #cursor_color: app.lightblue
+            cursor_color: app.greyblue
+            multiline: False
+            password: True
+            password_mask: '°'
+            hint_text: "Password?"
+            background: ''
+            background_color: app.lightblue
+            on_text_validate: root.on_login(self)
+
+<SignUp>
+    size_hint: .75, 1
+    pos_hint: {"center_x":.5}
+    orientation: "vertical"
+    spacing: "20dp"
+    # Um einen abstand vom logo zu haben
+    Widget:
+        size_hint: 1, .01
+    Label:
+        size_hint: 1, .65
+        text_size: self.size
+        halign: 'center'
+        valign: 'top'
+        font_size: "60dp"
+        color: app.darkblue
+        text: "Sign up"
+        bold: True
+    GridLayout:
+        rows: 2
+        cols: 2
+        spacing: "20dp", "30dp"
+        Image:
+            source: "Images/User_Down_DermoPEL.png"
+            size_hint: None, None
+            size: "50dp", "50dp"
+        TextInput:
+            id: signup_namebox
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "20dp"
+            #zu dunkel
+            #cursor_color: app.darkblue
+            #zu hell
+            #cursor_color: app.lightblue
+            cursor_color: app.greyblue
+            multiline: False
+            hint_text: "Username?"
+            background: ''
+            background_color: app.lightblue
+            on_text_validate: root.on_signup(self)
+        Image:
+            source: "Images/Password_DermoPEL.png"
+            size_hint: None, None
+            size: "50dp", "50dp"
+        TextInput:
+            id: signup_passbox
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "20dp"
+            #zu dunkel
+            #cursor_color: app.darkblue
+            #zu hell
+            #cursor_color: app.lightblue
+            cursor_color: app.greyblue
+            multiline: False
+            password: True
+            password_mask: '°'
+            hint_text: "Password?"
+            background: ''
+            background_color: app.lightblue
+            on_text_validate: root.on_signup(self)
+    BoxLayout:
+        valign: "middle"
+        halign: "center"
+        spacing: "10dp"
+        CheckBox:
+            # group für radiobutton
+            id: patientcheckbox
+            size_hint: .25, .25
+            halign: "left"
+            #size: "10dp", "10dp"
+            group: "patordoc"
+            allow_no_selection: False
+            active: True
+            #background: ''
+            color: app.darkblue
+        Image:
+            source: "Images/Patient_DermoPEL.png"
+            size_hint: None, None
+            size: "30dp", "30dp"
+        Label:
+            text_size: self.size
+            size_hint: .5, 1
+            text: "Patient"
+            font_size: "20dp"
+            color: app.darkblue
+        CheckBox:
+            id: doctorcheckbox
+            size_hint: .25, .25
+            group: "patordoc"
+            allow_no_selection: False
+            color: app.darkblue
+        Image:
+            source: "Images/Doctor_DermoPEL.png"
+            size_hint: None, None
+            size: "30dp", "30dp"
+        Label:
+            text_size: self.size
+            size_hint: .5, 1
+            text: "Doctor"
+            font_size: "20dp"
+            color: app.darkblue
+    Widget:
+
+<Bottom_Userscreens@BoxLayout>
+    returnbuttonplacement: "center"
+    transitiondirection: ""
+    padding: ("5dp", "25dp", "5dp", "25dp")
+    size_hint: 1, None
+    height: "70dp"
+    canvas.before:
+        Color:
+            rgba: app.lightblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        AnchorLayout:
+            #attribut rufen
+            anchor_x: root.returnbuttonplacement
+            anchor_y: "center"
+            Button:
+                size_hint: None, None
+                size: "50dp", "50dp"
+                #Border muss auf 0 gesetzt werden, um Stretch zu verhindern.
+                border: (0, 0, 0, 0)
+                #Hier gehört returnpfeil symbol statt homesymbol!!!
+                background_normal: "Images/Return_DermoPEL.png"
+                background_down: "Images/Return_Down_DermoPEL.png"
+                on_release:
+                    app.root.ids.DermoScreens.transition = CardTransition()
+                    app.root.ids.DermoScreens.transition.direction = root.transitiondirection
+                    app.root.ids.DermoScreens.current = 'startscreen'
+
+<Setting@BoxLayout>
+    size_hint: .75, 1
+    pos_hint: {"center_x":.5}
+    orientation: "vertical"
+    padding: "20dp"
+    #Hier GridLayout, da Einstellungen mit Labels und Textinputs sind.
+    Button:
+        pos_hint: {"center_x":.5}
+        size_hint: .5, .2
+        text: "Tutorial"
+    GridLayout:
+        rows: 5
+        cols: 2
+        spacing: "20dp", "20dp"
+        Label:
+            text: "Assistant?"
+            font_size: "20dp"
+            #hex(#0824aa)
+            color: app.darkblue
+        Switch:
+            id: assistant_switch
+        Label:
+            text: "Share Data?"
+            font_size: "20dp"
+            color: app.darkblue
+        Switch:
+            id: Data_switch
+        Label:
+            text: "Doctor?"
+            font_size: "20dp"
+            color: app.darkblue
+        Switch:
+            id: Doctor_switch
+        Label:
+            text: "Language?"
+            font_size: "20dp"
+            color: app.darkblue
+        #Hier Button unoptimal, eigentlich Combobox / Listbox
+        Button:
+            id: Language_Box
+            text: "Select Language"
+        #Hier Widget, da Kivy keine columnspan supportet.
+        #Problem: beachtet spacing nicht.
+        #Widget:
+        #    pos_hint: {"center_x":.5}
+        #    Button:
+        #        pos: self.parent.pos
+        #        width: self.parent.width * 2
+        #pos_hint: {"center_x":.5}
+
+<EntryBar>
+    #neues attribut definieren, welches wir in höheren klassen ändern können.
+    padding: ("5dp", "25dp", "5dp", "25dp")
+    size_hint: 1, None
+    height: "70dp"
+    canvas.before:
+        Color:
+            rgba: app.lightblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        id: box
+        AnchorLayout:
+            #size_hint: None, 1
+            #width: "50dp"
+            #attribut rufen
+            anchor_x: "left"
+            anchor_y: "center"
+            Button:
+                size_hint: None, None
+                size: "50dp", "50dp"
+                #Border muss auf 0 gesetzt werden, um Stretch zu verhindern.
+                border: (0, 0, 0, 0)
+                background_normal: "Images/Home_DermoPEL.png"
+                background_down: "Images/Home_Down_DermoPEL.png"
+                on_release:
+                    app.root.ids.DermoScreens.transition = RiseInTransition()
+                    #app.root.ids.DermoScreens.transition.direction = "center"
+                    app.root.ids.DermoScreens.current = 'patientscreen'
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "center"
+            size_hint: None, 1
+            width: root.ids.box.width
+            Button:
+                size_hint: None, None
+                size: "50dp", "50dp"
+                #Border muss auf 0 gesetzt werden, um Stretch zu verhindern.
+                border: (0, 0, 0, 0)
+                background_normal: "Images/SaveEntry_DermoPEL.png"
+                background_down: "Images/SaveEntry_Down_DermoPEL.png"
+                background_disabled_normal: "Images/SaveEntry_DermoPEL.png"
+                background_disabled_down: "Images/SaveEntry_Down_DermoPEL.png"
+                #disabled: False if not app.isdoctor else True
+                #background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+                on_release: root.on_save_release(self)
+
+<ProfileBar>
+    padding: ("5dp", "25dp", "5dp", "25dp")
+    size_hint: 1, None
+    height: "70dp"
+    canvas.before:
+        Color:
+            rgba: app.lightblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        id: box
+        AnchorLayout:
+            #size_hint: None, 1
+            #width: "50dp"
+            #attribut rufen
+            anchor_x: "left"
+            anchor_y: "center"
+            Button:
+                size_hint: None, None
+                size: "50dp", "50dp"
+                #Border muss auf 0 gesetzt werden, um Stretch zu verhindern.
+                border: (0, 0, 0, 0)
+                background_normal: "Images/Logout_DermoPEL.png"
+                background_down: "Images/Logout_Down_DermoPEL.png"
+                background_disabled_normal: "Images/Logout_DermoPEL.png"
+                background_disabled_down: "Images/Logout_Down_DermoPEL.png"
+                disabled: False if not app.isdoctor else True
+                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+                on_release: root.on_logout(self)
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "center"
+            size_hint: None, 1
+            width: root.ids.box.width
+            Button:
+                size_hint: None, None
+                size: "50dp", "50dp"
+                #Border muss auf 0 gesetzt werden, um Stretch zu verhindern.
+                border: (0, 0, 0, 0)
+                background_normal: "Images/SaveEntry_DermoPEL.png"
+                background_down: "Images/SaveEntry_Down_DermoPEL.png"
+                background_disabled_normal: "Images/SaveEntry_DermoPEL.png"
+                background_disabled_down: "Images/SaveEntry_Down_DermoPEL.png"
+                disabled: False if not app.isdoctor else True
+                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+                on_release: root.on_save_profile(self)
+        AnchorLayout:
+            anchor_x: "right"
+            anchor_y: "center"
+            Button:
+                size_hint: None, None
+                size: "50dp", "50dp"
+                #Border muss auf 0 gesetzt werden, um Stretch zu verhindern.
+                border: (0, 0, 0, 0)
+                background_normal: "Images/Delete_DermoPEL.png"
+                background_down: "Images/Delete_Down_DermoPEL.png"
+                background_disabled_normal: "Images/Delete_DermoPEL.png"
+                background_disabled_down: "Images/Delete_Down_DermoPEL.png"
+                disabled: False if not app.isdoctor else True
+                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+                on_release: root.on_patient_delete(self)
+
+<TopBar@BoxLayout>
+    #neues attribut definieren, welches wir in höheren klassen ändern können.
+    transitiontype: CardTransition()
+    topbarhomebuttonplacement: "center"
+    transitiondirection: ""
+    enterscreen: "patientscreen" if not app.isdoctor else "doctorscreen"
+   # bgcolor: app.lightblue
+    padding: ("5dp", "25dp", "5dp", "25dp")
+    size_hint: 1, None
+    height: "70dp"
+    canvas.before:
+        Color:
+            rgba: app.lightblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        AnchorLayout:
+            #attribut rufen
+            anchor_x: root.topbarhomebuttonplacement
+            anchor_y: "center"
+            Button:
+                size_hint: None, None
+                size: "50dp", "50dp"
+                #Border muss auf 0 gesetzt werden, um Stretch zu verhindern.
+                border: (0, 0, 0, 0)
+                background_normal: "Images/Home_DermoPEL.png"
+                background_down: "Images/Home_Down_DermoPEL.png"
+                on_release:
+                    app.root.ids.DermoScreens.transition = root.transitiontype
+                    app.root.ids.DermoScreens.transition.direction = root.transitiondirection
+                    app.root.ids.DermoScreens.current = root.enterscreen if not app.istreating else "patientscreen"
+
+<Entrys>
+    size_hint: .75, .75
+    separator_color: app.darkblue
+    background: ''
+    background_color: app.greyblue
+    title: "Entrys"
+    title_align: "center"
+    title_color: 0, 0, 0, 1
+    BoxLayout:
+        orientation: "vertical"
+        spacing: "10dp"
+        ScrollView:
+            BoxLayout:
+                padding: ("5dp", "20dp", "5dp", "20dp")
+                valign: "top"
+                id: entrylayout
+                orientation: "vertical"
+                spacing: "20dp"
+                #Scrollt automatisch bis ende der Seite:
+                size_hint: 1, None
+                height: self.minimum_height
+        Button:
+            text_size: self.size
+            size_hint: 1, None
+            height: "27dp"
+            background_normal: ''
+            background_disabled_normal: ''
+            background_color: .01, .01, .2, 1
+            font_size: "15dp"
+            text: "delete protocol"
+            #bold: True
+            halign: "center"
+            valign: "center"
+            disabled: False if not app.isdoctor else True
+            on_release: root.on_protocol_delete(self)
+
+<NewProtocoll>
+    size_hint: .4, .4
+    separator_color: app.darkblue
+    background: ''
+    background_color: app.greyblue
+    title: "New Protocol"
+    title_align: "center"
+    title_color: 0, 0, 0, 1
+    BoxLayout:
+        orientation: "vertical"
+        spacing: "60dp"
+        valign: "top"
+        #pos_hint: {"center_y": .65}
+        LimitInput:
+            id: new_protocol_namebox
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "20dp"
+            cursor_color: app.greyblue
+            #cursor_color: app.darkblue
+            multiline: False
+            hint_text: "Name?"
+            limit: 13
+            on_text_validate: root.on_new_protocol_release(self), root.dismiss()
+        Button:
+            size_hint: None, None
+            size: "80dp", "30dp"
+            pos_hint: {"center_x": .5}
+            # Kivy setzt den Hintergrund zu einem Image, um es zu einer Farbe zu machen dieser Code:
+            background: ''
+            background_color: app.darkblue
+            text: "Save"
+            # Hier fehlt DB INSERT
+            on_release: root.on_new_protocol_release(self), root.dismiss()
+
+<LoginOrSignUpError>
+    size_hint: .4, .4
+    separator_color: app.darkblue
+    background: ''
+    background_color: app.greyblue
+    title: "Error"
+    title_align: "center"
+    title_color: 0, 0, 0, 1
+    Label:
+        text_size: self.size
+        valign: "middle"
+        halign: "center"
+        font_size: "25dp"
+        color: 0, 0, 0, 1
+        text: root.loginorsignuperrormsg
+        bold: True
+
+<ChoosePicture>
+    size_hint: .7, .45
+    separator_color: app.darkblue
+    background: ''
+    background_color: app.greyblue
+    title: "choose method"
+    title_align: "center"
+    title_color: 0, 0, 0, 1
+    BoxLayout:
+        BoxLayout:
+            orientation: "vertical"
+            Button:
+                background_normal: "Images/Folder_DermoPEL.png"
+                background_down: "Images/Folder_Down_DermoPEL.png"
+                size_hint_y: None
+                height: self.width
+                valign: "middle"
+                halign: "center"
+                on_release: root.on_fromfolder(self)
+            Label:
+                text_size: self.size
+                size_hint: 1, .2
+                valign: "top"
+                halign: "center"
+                font_size: "20dp"
+                color: 0, 0, 0, 1
+                text: "choose from gallery"
+                color: app.darkblue
+                bold: True
+        BoxLayout:
+            orientation: "vertical"
+            Button:
+                background_normal: "Images/new_pic_DermoPEL.png"
+                background_down: "Images/New_Pic_Down_DermoPEL.png"
+                size_hint_y: None
+                height: self.width
+                valign: "middle"
+                halign: "center"
+            Label:
+                text_size: self.size
+                size_hint: 1, .2
+                valign: "top"
+                halign: "center"
+                font_size: "20dp"
+                color: 0, 0, 0, 1
+                text: "take new picture"
+                color: app.darkblue
+                bold: True
+<ConfirmPicture>
+    size_hint: .85, .85
+    separator_color: app.darkblue
+    background: ''
+    background_color: app.greyblue
+    title: "Confirm Picture"
+    title_align: "center"
+    title_color: 0, 0, 0, 1
+    auto_dismiss: False
+    BoxLayout:
+        spacing: "10dp"
+        orientation: "vertical"
+        Image:
+            id: entryimg
+            source: ''
+            allow_stretch: True
+        BoxLayout:
+            size_hint_y: .1
+            spacing: "10dp"
+            Button:
+                size_hint_x: .2
+                #size_hint: None, None
+                #size: "80dp", "30dp"
+                #pos_hint: {"center_x": .5}
+                # Kivy setzt den Hintergrund zu einem Image, um es zu einer Farbe zu machen dieser Code:
+                background: ''
+                background_color: app.darkblue
+                text: "Save"
+                on_release: root.on_confirm_release(self)
+            Button:
+                size_hint_x: .2
+                #size_hint: None, None
+                #size: "80dp", "30dp"
+                #pos_hint: {"center_x": .5}
+                # Kivy setzt den Hintergrund zu einem Image, um es zu einer Farbe zu machen dieser Code:
+                background: ''
+                background_color: app.darkblue
+                text: "dismiss"
+                on_release: root.dismiss()
+
+<ConfirmAction>
+    size_hint: .8, .5
+    separator_color: app.darkblue
+    background: ''
+    background_color: app.greyblue
+    title: "Confirm"
+    title_align: "center"
+    title_color: 0, 0, 0, 1
+    BoxLayout:
+        orientation: "vertical"
+        Label:
+            text_size: self.size
+            valign: "middle"
+            halign: "center"
+            font_size: "25dp"
+            color: 0, 0, 0, 1
+            text: root.msg
+            bold: True
+        BoxLayout:
+            size_hint_y: .2
+            spacing: "20dp"
+            Button:
+                size_hint_x: .2
+                background: ''
+                background_color: app.darkblue
+                text: "confirm"
+                on_release: root.on_confirm(self)
+            Button:
+                size_hint_x: .2
+                background: ''
+                background_color: app.darkblue
+                text: "dismiss"
+                on_release: root.dismiss()
+
+
+#<DoctorChoose>
+#hier kommt popup, wo arzt entscheidet, ob dieser die stammdaten oder die protokolle einsehen möchte.
+
+#<Protocol_Button@Button>
+#    size_hint: None, None
+#    size: "50dp", "50dp"
+#    border: (0, 0, 0, 0)
+#    background_normal: "Images/Folder_Green_DermoPEL.png"
+#    background_down: "Images/Folder_Green_Down_DermoPEL.png"
+
+#<AssistantScreen@Screen>
+    #Assistent ist Kannziel.

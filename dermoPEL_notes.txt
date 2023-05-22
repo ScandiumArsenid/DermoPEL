@@ -1,0 +1,30 @@
+---
+-Ziele
+---
+
+1X entryscreen: different tabs: date & picture, picture & pain & color & diameter & anomaly, notes, notes from doctor.
+2X Arzt muss sowohl Stammdaten als auch Protokolle sehen können
+3X Arzt muss eigene Kommentare hinzfügen können
+4X Patient muss seine Stammdaten angeben, bevor dieser Protokolle erstellen kann
+5 Kamera
+6X Patient muss Arzt angeben können
+7 tempimages zu tempdirectorys ändern, und dann ganze dirs löschen+
+
+
+
+
+---
+-KannZiele
+---
+
+1 Tutorial erstellen
+2 Statistiken Seite
+3 Settings Seite
+4 Error handling
+5 Hero von Protocol-Icon
+6 Stammdaten erweitern
+7X es fehlt user deletion + arztscreen
+8 message hinzufügen, für wenn der Arzt keine Patienten hat.
+
+
+!!! https://www.youtube.com/watch?v=EupAeyL8zAo !!!
