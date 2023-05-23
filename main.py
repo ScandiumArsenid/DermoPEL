@@ -143,6 +143,7 @@
         Sarmiento Tobias
 
     DermoPEL Version 21.1:
+        Settingsscreen zu Doctorsearch geändert
         Sarmiento Tobias
 
 -----------------------------------------------------
@@ -240,7 +241,10 @@ currimg = 0
 currpatient = 0
 currdoc = 0
 currdir = 0
+userprotocol = 0
 isprinted = False
+# entrycounter wird für die imgs benötigt.
+entrycounter = {}
 
 # JSON File for Login-storage (muss zu store = JsonStore(App.get_running_app().user_data_dir + '/login.json') geändert werden vor der kompilierung wegen android.)
 store = JsonStore('login.json')
@@ -273,7 +277,7 @@ def createimgs(b):
     global currdir
     # Konvertiert blob = > png
     os.mkdir(f'./Temp/TempEntry{currentry}')
-    file = open(f'Temp/TempEntry{currentry}/tempimgdb.png', "wb")
+    file = open(f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png', "wb")
     file.write(base64.b64decode(b))
     # print(blob)
     # pad = len(blob) % 4
@@ -284,10 +288,11 @@ def createimgs(b):
     # file.write(codecs.decode(blob, 'base64'))
     file.close()
     # Erschafft zweites dünkleres Foto
-    img = Image.open(f'Temp/TempEntry{currentry}/tempimgdb.png')
+    img = Image.open(f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png')
     img = img.point(lambda p: p * 0.5)
-    img.save(f'Temp/TempEntry{currentry}/tempimgdb_down.png')
+    img.save(f'Temp/TempEntry{currentry}/tempimgdb_down{entrycounter[currprotocol][currentry]}.png')
     currdir = currdir + 1
+    entrycounter[currprotocol][currentry] = entrycounter[currprotocol][currentry] + 1
     # hier ist mit currentry statt currdir schlauer!!!
 
 
@@ -320,12 +325,14 @@ class Top_PatientAndDoctorScreen(BoxLayout):
             App.get_running_app().root.ids.DermoScreens.transition.direction = 'left'
             App.get_running_app().root.ids.DermoScreens.current = 'profilescreen'
         else:
-            global curruserid, currprotocol, currentry, currdoc, currpatient, isprinted
+            global curruserid, currprotocol, currentry, currdoc, currpatient, isprinted, userprotocol, entrycounter
             curruserid = 0
             currprotocol = 0
+            userprotocol = 0
             currentry = 0
             currdoc = 0
             currpatient = 0
+            entrycounter = {}
             App.get_running_app().isdoctor = False
             App.get_running_app().istreating = False
             App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
@@ -539,13 +546,12 @@ class Protocol(StackLayout):
     #    super().__init__(**kwargs)
     # Funktion wird in on_pre_enter von screen gerufen.
     def draw_protocol(self):
-        global curruserid
+        global curruserid, entrycounter
         db = Database()
         db.cursor.execute(f"SELECT pr_id, pr_name FROM Protocol WHERE pr_p_id = {curruserid}")
         prrecords = db.cursor.fetchall()
-
         self.clear_widgets()
-        for i in range(0, len(prrecords)):
+        for i, p in enumerate(prrecords):
             protocolfolder = Button(
                 # padding=("20dp", "20dp", "20dp", "20dp"),
                 size_hint=(None, None),
@@ -563,6 +569,10 @@ class Protocol(StackLayout):
                 protocolfolder.width, protocolfolder.height)  # Set text_size to the size of the button
             protocolfolder.text = prrecords[i][1]  # Set the text of the button after setting the text_size
             self.add_widget(protocolfolder)
+            if len(prrecords) - len(entrycounter) > 0:
+                entrycounter.update({p[0]: {}})
+            #elif len(prrecords) - len(entrycounter) == 1:
+            #    entrycounter.update({p[-1]: []})
             # protocolname = Label(
             #    size_hint=(None, None),
             #    size=("110dp", "110dp"),
@@ -744,15 +754,22 @@ class EntryScreen(Screen):
         # setzt Datum
         tablist[0].children[0].children[1].text = str(datetime.strptime(
             str(entry[6]), '%Y-%m-%d').strftime('%#d. %#m. %Y'))
+        print(entrycounter)
         # setzt foto
-        if entry[3] is not None and not os.path.exists(f'Temp/TempEntry{currentry}/tempimgdb.png'):
+        if entry[3] is not None:
+            if os.path.exists(f'Temp/TempEntry{currentry}'):
+                for f in os.listdir(f'Temp/TempEntry{currentry}'):
+                    os.remove(os.path.join(f'Temp/TempEntry{currentry}', f))
+                os.rmdir(f'Temp/TempEntry{currentry}')
             createimgs(entry[3])
-            tablist[0].children[1].background_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
-            tablist[0].children[1].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
-            tablist[0].children[1].background_disabled_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
-            tablist[0].children[1].background_disabled_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
+            tablist[0].children[1].background_normal = f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png'
+            tablist[0].children[1].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down{entrycounter[currprotocol][currentry]}.png'
+            tablist[0].children[1].background_disabled_normal = f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png'
+            tablist[0].children[1].background_disabled_down = f'Temp/TempEntry{currentry}/tempimgdb_down{entrycounter[currprotocol][currentry]}.png'
             # self.children[0].children[0].children[0].children[2].background_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
             # self.children[0].children[0].children[0].children[2].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
+        else:
+            os.mkdir(f'./Temp/TempEntry{currentry}')
         # setzt schmerz
         if entry[4] is not None:
             tablist[1].children[3].value = entry[4]
@@ -915,12 +932,14 @@ class EntryCamera(BoxLayout):
 
 class ProfileBar(BoxLayout):
     def on_logout(self, widget):
-        global curruserid, currprotocol, currentry, currdoc, currpatient
+        global curruserid, currprotocol, currentry, currdoc, currpatient, userprotocol, entrycounter
         curruserid = 0
         currprotocol = 0
         currentry = 0
         currdoc = 0
         currpatient = 0
+        userprotocol = 0
+        entrycounter = {}
         App.get_running_app().isdoctor = False
         App.get_running_app().istreating = False
         App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
@@ -967,7 +986,7 @@ class ProfileBar(BoxLayout):
         confirmdelete.open()
 
     def on_confirm(self):
-        global curruserid, currprotocol, currentry, currdoc, currpatient
+        global curruserid, currprotocol, currentry, currdoc, currpatient, userprotocol, entrycounter
         db = Database()
         db.cursor.execute(f"DELETE FROM Patient WHERE p_id = {curruserid}")
         db.conn.commit()
@@ -977,6 +996,8 @@ class ProfileBar(BoxLayout):
         currentry = 0
         currdoc = 0
         currpatient = 0
+        userprotocol = 0
+        entrycounter = 0
         App.get_running_app().isdoctor = False
         App.get_running_app().istreating = False
         App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
@@ -1155,13 +1176,13 @@ class NotesTab(BoxLayout, MDTabsBase):
 
 class Entrys(Popup):
     def on_open(self):
-        global curruserid, currprotocol
+        global curruserid, currprotocol, entrycounter
         db = Database()
-        db.cursor.execute(f"SELECT e_date FROM Entry WHERE e_pr_id = {currprotocol}")
+        db.cursor.execute(f"SELECT e_date, e_id FROM Entry WHERE e_pr_id = {currprotocol}")
         entrys = db.cursor.fetchall()
         for i, entry in enumerate(entrys):
             # print(entry[0].strftime("%d %m %Y"))
-            list(entry).sort()
+            #list(entry).sort()
             date = datetime.strptime(str(entry[0]), '%Y-%m-%d').strftime('%#d. %#m. %Y')
             entrybtn = Button(
                 size_hint=(1, None),
@@ -1179,6 +1200,13 @@ class Entrys(Popup):
             )
             entrybtn.index = i
             self.ids.entrylayout.add_widget(entrybtn, 0)
+            if len(entrycounter[currprotocol]) < len(entrys):
+                #print(entry)
+                entrycounter[currprotocol].update({entry[1]:0})
+            #print(entrycounter)
+        #if entrys is not [()]:
+            #if len(entrycounter[currprotocol]) < len(entrys):
+            #    entrycounter[currprotocol].append(0)
         newentrybtn = Button(
             size_hint=(1, None),
             height="60dp",
@@ -1284,8 +1312,9 @@ class ChoosePicture(Popup):
     def select_path(self, path: str):
         db = Database()
         self.exit_manager()
-        for o in os.listdir('Temp'):
-            os.remove(os.path.join('Temp', o))
+        for f in os.listdir(f'Temp/TempEntry{currentry}'):
+            os.remove(os.path.join(f'Temp/TempEntry{currentry}', f))
+        os.rmdir(f'Temp/TempEntry{currentry}')
         imgblob = bytearray(convertdata((path)))
         query = f"UPDATE entry SET e_picture = %s WHERE e_id = {currentry}"
         values = (imgblob,)
@@ -1295,10 +1324,10 @@ class ChoosePicture(Popup):
         tab = self.parent.children[3].children[0].children[0].children[0].children[1].get_slides()[0]
         # print(self.parent.children)
         createimgs(imgblob)
-        tab.children[1].background_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
-        tab.children[1].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
-        tab.children[1].background_disabled_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
-        tab.children[1].background_disabled_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
+        tab.children[1].background_normal = f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png'
+        tab.children[1].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down{entrycounter[currprotocol][currentry]}.png'
+        tab.children[1].background_disabled_normal = f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png'
+        tab.children[1].background_disabled_down = f'Temp/TempEntry{currentry}/tempimgdb_down{entrycounter[currprotocol][currentry]}.png'
 
     def exit_manager(self, *args):
         tab = self.parent.children[2].children[0].children[0].children[0].children[1].get_slides()[0]
