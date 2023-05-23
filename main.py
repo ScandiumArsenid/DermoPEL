@@ -146,6 +146,11 @@
         Settingsscreen zu Doctorsearch geändert
         Sarmiento Tobias
 
+    DermoPEL Version 21.2:
+        Counter und Liste für Fotos hinzugefügt,
+        FEHLERHAFT! Fotos werden weiß angezeigt
+        Sarmiento tobias
+
 -----------------------------------------------------
 """
 # Bug: bei erstmaligem einloggen werden protokolle nicht angezeigt! fixed!!!
@@ -274,7 +279,8 @@ def convertdata(filename):
 
 
 def createimgs(b):
-    global currdir
+    global currdir, entrycounter
+    entrycounter[currprotocol][currentry] = entrycounter[currprotocol][currentry] + 1
     # Konvertiert blob = > png
     os.mkdir(f'./Temp/TempEntry{currentry}')
     file = open(f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png', "wb")
@@ -292,7 +298,6 @@ def createimgs(b):
     img = img.point(lambda p: p * 0.5)
     img.save(f'Temp/TempEntry{currentry}/tempimgdb_down{entrycounter[currprotocol][currentry]}.png')
     currdir = currdir + 1
-    entrycounter[currprotocol][currentry] = entrycounter[currprotocol][currentry] + 1
     # hier ist mit currentry statt currdir schlauer!!!
 
 
@@ -767,9 +772,16 @@ class EntryScreen(Screen):
             tablist[0].children[1].background_disabled_normal = f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png'
             tablist[0].children[1].background_disabled_down = f'Temp/TempEntry{currentry}/tempimgdb_down{entrycounter[currprotocol][currentry]}.png'
             # self.children[0].children[0].children[0].children[2].background_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
-            # self.children[0].children[0].children[0].children[2].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
         else:
             os.mkdir(f'./Temp/TempEntry{currentry}')
+            tablist[0].children[
+                1].background_normal = 'Images/new_pic_DermoPEL.png'
+            tablist[0].children[
+                1].background_down = 'Images/New_Pic_Down_DermoPEL.png'
+            tablist[0].children[
+                1].background_disabled_normal = 'Images/new_pic_DermoPEL.png'
+            tablist[0].children[
+                1].background_disabled_down = 'Images/New_Pic_Down_DermoPEL.png'
         # setzt schmerz
         if entry[4] is not None:
             tablist[1].children[3].value = entry[4]
