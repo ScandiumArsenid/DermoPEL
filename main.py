@@ -138,14 +138,19 @@
         Sarmiento Tobias
 
     DermoPEL Version 21:
+        git repo initialized
+        tempfile-struktur geändert
+        Sarmiento Tobias
+
+    DermoPEL Version 21.1:
         Sarmiento Tobias
 
 -----------------------------------------------------
 """
 # Bug: bei erstmaligem einloggen werden protokolle nicht angezeigt! fixed!!!
 import codecs
-#from android.permissions import request_permissions, Permission
-#from android.storage import primary_external_storage_path
+# from android.permissions import request_permissions, Permission
+# from android.storage import primary_external_storage_path
 from kivy import utils
 from kivy.app import App
 from kivy.graphics import Color, RoundedRectangle
@@ -231,7 +236,7 @@ curruserid = 0
 currprotocol = 0
 currentry = 0
 currimg = 0
-#currentryimg = 0
+# currentryimg = 0
 currpatient = 0
 currdoc = 0
 currdir = 0
@@ -263,9 +268,10 @@ def convertdata(filename):
     binary_data = codecs.encode(binary_data, 'base64')
     return binary_data
 
+
 def createimgs(b):
     global currdir
-    #Konvertiert blob = > png
+    # Konvertiert blob = > png
     os.mkdir(f'./Temp/TempEntry{currentry}')
     file = open(f'Temp/TempEntry{currentry}/tempimgdb.png', "wb")
     file.write(base64.b64decode(b))
@@ -282,7 +288,7 @@ def createimgs(b):
     img = img.point(lambda p: p * 0.5)
     img.save(f'Temp/TempEntry{currentry}/tempimgdb_down.png')
     currdir = currdir + 1
-    #hier ist mit currentry statt currdir schlauer!!!
+    # hier ist mit currentry statt currdir schlauer!!!
 
 
 # -----------------------------------------------------
@@ -300,6 +306,7 @@ class Display(BoxLayout):
 
 class LoginScreen(Screen):
     pass
+
 
 class Top_PatientAndDoctorScreen(BoxLayout):
     def easter_egg(self, widget):
@@ -420,10 +427,10 @@ class SignUp(BoxLayout):
                         # MD5-Hash Algorithmus
                         hashpass = hashlib.md5(self.ids.signup_passbox.text.encode()).hexdigest()
                         db.cursor.execute("INSERT INTO Patient (p_loginname, p_password) VALUES (%s, %s)",
-                                               (self.ids.signup_namebox.text, hashpass))
+                                          (self.ids.signup_namebox.text, hashpass))
                         db.conn.commit()
                         db.cursor.execute("SELECT p_id FROM Patient WHERE p_loginname = %s",
-                                               (self.ids.signup_namebox.text,))
+                                          (self.ids.signup_namebox.text,))
                         curruserid = db.cursor.fetchone()[0]
                         store.put('curruserjson', curruser=curruserid, type="patient",
                                   expires=(datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S.%f'))
@@ -434,10 +441,10 @@ class SignUp(BoxLayout):
                     elif self.ids.doctorcheckbox.active:
                         hashpass = hashlib.md5(self.ids.signup_passbox.text.encode()).hexdigest()
                         db.cursor.execute("INSERT INTO Doctor (d_loginname, d_password) VALUES (%s, %s)",
-                                               (self.ids.signup_namebox.text, hashpass))
+                                          (self.ids.signup_namebox.text, hashpass))
                         db.conn.commit()
                         db.cursor.execute("SELECT d_id FROM Doctor WHERE d_loginname = %s",
-                                               (self.ids.signup_namebox.text,))
+                                          (self.ids.signup_namebox.text,))
                         curruserid = db.cursor.fetchone()[0]
                         store.put('curruserjson', curruser=curruserid, type="doctor",
                                   expires=(datetime.now() + timedelta(hours=24)).strftime('%Y-%m-%d %H:%M:%S.%f'))
@@ -458,7 +465,8 @@ class PatientSwipeItem(MDSwiperItem):
     lastn = StringProperty("")
     svnr = StringProperty("")
     currpat = NumericProperty(0)
-    #currpattemp = NumericProperty(0)
+
+    # currpattemp = NumericProperty(0)
 
     def __init__(self, currpat, firstn, lastn, svnr, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -475,9 +483,10 @@ class DoctorScreen(MDScreen):
         if not isprinted:
             App.get_running_app().isdoctor = True
             db = Database()
-            db.cursor.execute(f"SELECT p_id, p_firstname, p_name, p_svnr FROM Patient WHERE p_d_treatingdoctor = {curruserid}")
+            db.cursor.execute(
+                f"SELECT p_id, p_firstname, p_name, p_svnr FROM Patient WHERE p_d_treatingdoctor = {curruserid}")
             patients = db.cursor.fetchall()
-            #clears widgets
+            # clears widgets
             widgets = []
             for widget in self.children[0].children[1].children[0].children[0].children:
                 widgets.append(widget)
@@ -489,7 +498,7 @@ class DoctorScreen(MDScreen):
                     firstn=str(patient[1]),
                     lastn=str(patient[2]),
                     svnr=str(patient[3]),
-                    #on_touch_down=self.on_click_patient(self)
+                    # on_touch_down=self.on_click_patient(self)
                 )
                 self.children[0].children[1].children[0].add_widget(pat)
             isprinted = True
@@ -508,10 +517,10 @@ class PatientScreen(Screen):
     def on_enter(self, *args):
         # ruft children [0] (Screenmanager) children[1] (middlescreen) children[0] (protocol)
         self.children[0].children[1].children[0].children[1].draw_protocol()
-        #Damit Protocolle in der mitte des screens erscheinen.
-        #height = Window.height
+        # Damit Protocolle in der mitte des screens erscheinen.
+        # height = Window.height
         width = Window.width
-        #print(f"Window height: {height}, Window width: {width}")
+        # print(f"Window height: {height}, Window width: {width}")
         ratio = width / dp(110)
         integ = int(str(ratio)[0])
         ratio = ratio - integ
@@ -597,7 +606,7 @@ class ProfileScreen(Screen):
             f"SELECT p_firstname, p_name, p_svnr, p_birthdate, p_allergies, p_preconditions, p_medications, p_d_treatingdoctor FROM Patient WHERE p_id = {curruserid}")
         currpat = db.cursor.fetchone()
         screen = self.children[0].children[1].children[0]
-        #for value, box in zip(currpat, screen.ids):
+        # for value, box in zip(currpat, screen.ids):
         #    if value is not None:
         #        screen.ids.box.text = str(value)
         if currpat[0] is not None:
@@ -621,42 +630,44 @@ class ProfileScreen(Screen):
         if currpat[7] is not None:
             db.cursor.execute(f"SELECT d_loginname FROM Doctor WHERE d_id = {currpat[7]}")
             screen.ids.treatingdocbox.text = str(db.cursor.fetchone()[0])
-        #print(self.ids)
-    #db.cursor.execute(f"SELECT ")
+        # print(self.ids)
+    # db.cursor.execute(f"SELECT ")
 
-    #def on_leave(self, *args):
-        #checkt, ob alle Felder ausgefüllt wurden
-        #db = Database()
-        #db.cursor.execute(
-        #    f"SELECT p_firstname, p_name, p_svnr, p_birthdate FROM Patient WHERE p_id = {curruserid}")
-        #currpat = db.cursor.fetchone()
-        #temp = True
-        #for val in currpat:
-        #    if val is None:
-        #        temp = False
-        #        App.get_running_app().canupdate = False
-        #if temp:
-        #    App.get_running_app().canupdate = True
+    # def on_leave(self, *args):
+    # checkt, ob alle Felder ausgefüllt wurden
+    # db = Database()
+    # db.cursor.execute(
+    #    f"SELECT p_firstname, p_name, p_svnr, p_birthdate FROM Patient WHERE p_id = {curruserid}")
+    # currpat = db.cursor.fetchone()
+    # temp = True
+    # for val in currpat:
+    #    if val is None:
+    #        temp = False
+    #        App.get_running_app().canupdate = False
+    # if temp:
+    #    App.get_running_app().canupdate = True
 
-        #screen = self.children[0].children[1].children[0]
-        ##texts = []
-        #for box in screen.children:
-        #    for inputs in box.children:
-        #        if isinstance(inputs, TextInput):
-        #            texts.append(inputs.text)
-        #        else:
-        #            for lowinputs in inputs.children:
-        #                if isinstance(lowinputs, TextInput):
-        #                    if not lowinputs.multiline:
-        #                        texts.append(lowinputs.text)
-        #print(texts)
+    # screen = self.children[0].children[1].children[0]
+    ##texts = []
+    # for box in screen.children:
+    #    for inputs in box.children:
+    #        if isinstance(inputs, TextInput):
+    #            texts.append(inputs.text)
+    #        else:
+    #            for lowinputs in inputs.children:
+    #                if isinstance(lowinputs, TextInput):
+    #                    if not lowinputs.multiline:
+    #                        texts.append(lowinputs.text)
+    # print(texts)
 
 
 class PatientData(BoxLayout):
     def on_date_release(self, widget):
-        #DatePicker
-        if self.ids.birthdatebox.text is not '': dateof = datetime.strptime(self.ids.birthdatebox.text, '%d. %m. %Y')
-        else: dateof = datetime.today()
+        # DatePicker
+        if self.ids.birthdatebox.text is not '':
+            dateof = datetime.strptime(self.ids.birthdatebox.text, '%d. %m. %Y')
+        else:
+            dateof = datetime.today()
         date_dialog = MDDatePicker(
             year=dateof.year,
             month=dateof.month,
@@ -707,7 +718,7 @@ class PatientData(BoxLayout):
                             ) / Window.width
             ).open()
         else:
-            #db = Database()
+            # db = Database()
             db.cursor.execute(f"UPDATE Patient SET p_d_treatingdoctor = {doc[0]} WHERE p_id = {curruserid}")
             db.conn.commit()
             Snackbar(
@@ -728,37 +739,37 @@ class EntryScreen(Screen):
         db = Database()
         db.cursor.execute(f"SELECT * FROM Entry WHERE e_id = {currentry} AND e_pr_p_id = {curruserid}")
         entry = db.cursor.fetchone()
-        #gibt eine Liste mit allen Tabs zurück 0 = pic 1 = pain 2 = notes
+        # gibt eine Liste mit allen Tabs zurück 0 = pic 1 = pain 2 = notes
         tablist = self.children[0].children[1].get_slides()
-        #setzt Datum
+        # setzt Datum
         tablist[0].children[0].children[1].text = str(datetime.strptime(
             str(entry[6]), '%Y-%m-%d').strftime('%#d. %#m. %Y'))
-        #setzt foto
+        # setzt foto
         if entry[3] is not None and not os.path.exists(f'Temp/TempEntry{currentry}/tempimgdb.png'):
             createimgs(entry[3])
             tablist[0].children[1].background_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
             tablist[0].children[1].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
             tablist[0].children[1].background_disabled_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
             tablist[0].children[1].background_disabled_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
-            #self.children[0].children[0].children[0].children[2].background_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
-            #self.children[0].children[0].children[0].children[2].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
-        #setzt schmerz
+            # self.children[0].children[0].children[0].children[2].background_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
+            # self.children[0].children[0].children[0].children[2].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
+        # setzt schmerz
         if entry[4] is not None:
             tablist[1].children[3].value = entry[4]
         else:
             tablist[1].children[3].value = 0
-        #setzt farbe
+        # setzt farbe
         if entry[5] is not None:
-            #tablist[1].children[0].children[1].currcolor = entry[5]
+            # tablist[1].children[0].children[1].currcolor = entry[5]
             tablist[1].currcolor = entry[5]
         else:
             tablist[1].currcolor = '#a6c8e0'
-        #setzt durchmesser
+        # setzt durchmesser
         if entry[7] is not None:
             tablist[1].children[0].children[1].children[1].text = str(entry[7]) + " cm"
         else:
             tablist[1].children[0].children[1].children[1].text = '0 cm'
-        #setzt anomalien
+        # setzt anomalien
         if entry[8] is not None:
             if entry[8] == 0:
                 tablist[1].children[0].children[0].children[1].color = (1, 1, 1, .5)
@@ -772,12 +783,12 @@ class EntryScreen(Screen):
             tablist[1].children[0].children[0].children[1].color = (.8, .95, 1, .5)
             tablist[1].children[0].children[0].children[1].text = "no"
             tablist[1].children[0].children[0].children[1].state = "down"
-        #setzt Notizen
+        # setzt Notizen
         if entry[9] is not None:
             tablist[2].children[2].text = entry[9]
         else:
             tablist[2].children[2].text = ''
-        #setzt ArztNotizen
+        # setzt ArztNotizen
         if entry[10] is not None:
             tablist[2].children[0].text = entry[10]
         else:
@@ -790,9 +801,9 @@ class EntryScreen(Screen):
         for val in currpat:
             if val == '' or val is None:
                 temp = False
-        #textinput für Arzt zugänglich machen
+        # textinput für Arzt zugänglich machen
         if App.get_running_app().isdoctor or not temp:
-            #diasabled alle widgets für arzt
+            # diasabled alle widgets für arzt
             for i in tablist[0:2]:
                 for j in i.children:
                     j.disabled = True
@@ -856,15 +867,15 @@ class EntryScreen(Screen):
         if entry[7] is not None:
             self.children[0].children[0].children[1].children[0].text = str(entry[7])"""
 
-    #def on_pre_leave(self, *args):
+    # def on_pre_leave(self, *args):
     #    os.remove(f'Temp/TempEntry{currentry}/tempimgdb.png')
 
 
 class Entry(BoxLayout):
     def on_currentryprint(self, widget):
         global curruserid, currprotocol, currentry
-        #App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
-        #App.get_running_app().root.ids.DermoScreens.current = 'camerascreen'
+        # App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
+        # App.get_running_app().root.ids.DermoScreens.current = 'camerascreen'
         Factory.ConfirmPicture().open()
         """
         db = Database(host="localhost", user="root", passwd="", database="dermopel_db")
@@ -874,8 +885,10 @@ class Entry(BoxLayout):
         db.cursor.execute("INSERT INTO Entry (e_id, e_picture) VALUES ({curruserid}, %s)",
                               (self.ids.new_protocol_namebox.text,))"""
 
+
 class LimitInput(TextInput):
     limit = 0
+
     def keyboard_on_key_up(self, keycode, text):
         if text[0] == 'backspace':
             self.do_backspace()
@@ -886,12 +899,13 @@ class LimitInput(TextInput):
 
 
 class CameraScreen(Screen):
-    #def on_pre_enter(self, *args):
-        #self.children[0].children[1].play = True
+    # def on_pre_enter(self, *args):
+    # self.children[0].children[1].play = True
 
-    #def on_leave(self, *args):
-        #self.children[0].children[1].play = False
+    # def on_leave(self, *args):
+    # self.children[0].children[1].play = False
     pass
+
 
 class EntryCamera(BoxLayout):
     def on_takepicture(self, widget):
@@ -916,25 +930,40 @@ class ProfileBar(BoxLayout):
     def on_save_profile(self, widget):
         db = Database()
         screen = self.parent.children[1].children[0]
-        db.cursor.execute(f"UPDATE Patient SET p_firstname = '{screen.ids.firstnamebox.text}' WHERE p_id = {curruserid}")
+        db.cursor.execute(
+            f"UPDATE Patient SET p_firstname = '{screen.ids.firstnamebox.text}' WHERE p_id = {curruserid}")
         db.cursor.execute(f"UPDATE Patient SET p_name = '{screen.ids.surnamebox.text}' WHERE p_id = {curruserid}")
-        if screen.ids.svnrbox.text != '': db.cursor.execute(f"UPDATE Patient SET p_svnr = {int(screen.ids.svnrbox.text)} WHERE p_id = {curruserid}")
-        else: db.cursor.execute(f"UPDATE Patient SET p_svnr = null WHERE p_id = {curruserid}")
-        if screen.ids.birthdatebox.text != '': db.cursor.execute(f"UPDATE Patient SET p_birthdate = '{datetime.strptime(screen.ids.birthdatebox.text, '%d. %m. %Y')}' WHERE p_id = {curruserid}")
-        else: db.cursor.execute(f"UPDATE Patient SET p_birthdate = null WHERE p_id = {curruserid}")
-        if screen.ids.allergiescheckbox.active: db.cursor.execute(f"UPDATE Patient SET p_allergies = '{screen.ids.allergybox.text}' WHERE p_id = {curruserid}")
-        else: db.cursor.execute(f"UPDATE Patient SET p_allergies = null WHERE p_id = {curruserid}")
-        if screen.ids.conditionscheckbox.active: db.cursor.execute(f"UPDATE Patient SET p_preconditions = '{screen.ids.conditionbox.text}' WHERE p_id = {curruserid}")
-        else: db.cursor.execute(f"UPDATE Patient SET p_preconditions = null WHERE p_id = {curruserid}")
-        if screen.ids.medicationscheckbox.active: db.cursor.execute(f"UPDATE Patient SET p_medications = '{screen.ids.medicationbox.text}' WHERE p_id = {curruserid}")
-        else: db.cursor.execute(f"UPDATE Patient SET p_medications = null WHERE p_id = {curruserid}")
+        if screen.ids.svnrbox.text != '':
+            db.cursor.execute(f"UPDATE Patient SET p_svnr = {int(screen.ids.svnrbox.text)} WHERE p_id = {curruserid}")
+        else:
+            db.cursor.execute(f"UPDATE Patient SET p_svnr = null WHERE p_id = {curruserid}")
+        if screen.ids.birthdatebox.text != '':
+            db.cursor.execute(
+                f"UPDATE Patient SET p_birthdate = '{datetime.strptime(screen.ids.birthdatebox.text, '%d. %m. %Y')}' WHERE p_id = {curruserid}")
+        else:
+            db.cursor.execute(f"UPDATE Patient SET p_birthdate = null WHERE p_id = {curruserid}")
+        if screen.ids.allergiescheckbox.active:
+            db.cursor.execute(
+                f"UPDATE Patient SET p_allergies = '{screen.ids.allergybox.text}' WHERE p_id = {curruserid}")
+        else:
+            db.cursor.execute(f"UPDATE Patient SET p_allergies = null WHERE p_id = {curruserid}")
+        if screen.ids.conditionscheckbox.active:
+            db.cursor.execute(
+                f"UPDATE Patient SET p_preconditions = '{screen.ids.conditionbox.text}' WHERE p_id = {curruserid}")
+        else:
+            db.cursor.execute(f"UPDATE Patient SET p_preconditions = null WHERE p_id = {curruserid}")
+        if screen.ids.medicationscheckbox.active:
+            db.cursor.execute(
+                f"UPDATE Patient SET p_medications = '{screen.ids.medicationbox.text}' WHERE p_id = {curruserid}")
+        else:
+            db.cursor.execute(f"UPDATE Patient SET p_medications = null WHERE p_id = {curruserid}")
         db.conn.commit()
         db.close()
 
     def on_patient_delete(self, widget):
         confirmdelete = Factory.ConfirmAction(caller=self)
         confirmdelete.msg = "Are you sure you want to delete your Account?"
-        #confirmdelete.bind(on_confirm=self.on_confirm_delete)
+        # confirmdelete.bind(on_confirm=self.on_confirm_delete)
         confirmdelete.open()
 
     def on_confirm(self):
@@ -960,7 +989,7 @@ class EntryBar(BoxLayout):
         # parent => parent => BoxLayout => EntryBottom => TabsMain => TabsCarousel => Tab1 => PictureTab => BoxLayout => Textinput
         #   self.parent.parent.children[0].children[1].children[1].children[0].children[0].children[0].children[0].children[1]
         currtab = self.parent.parent.children[0].children[1].children[1].children[0].children[0].children[0]
-        #Ueberprueft, ob currtab eine instanz von einem Tab ist.
+        # Ueberprueft, ob currtab eine instanz von einem Tab ist.
         if isinstance(currtab, PictureTab):
             currtab.on_picture_update()
         elif isinstance(currtab, PainTab):
@@ -973,7 +1002,7 @@ class PictureTab(BoxLayout, MDTabsBase):
     datepicker = MDDatePicker
 
     def on_date_release(self, widget):
-        #DatePicker
+        # DatePicker
         dateof = datetime.strptime(self.ids.datebox.text, '%d. %m. %Y')
         date_dialog = MDDatePicker(
             year=dateof.year,
@@ -993,7 +1022,7 @@ class PictureTab(BoxLayout, MDTabsBase):
     def on_datepicker(self, selecteddate, datelist):
         self.children[0].children[1].text = selecteddate.strftime('%#d. %#m. %Y')
         self.datepicker.dismiss()
-        #self.children[0].children[1].text
+        # self.children[0].children[1].text
 
     def on_new_picture(self, widget):
         Factory.ChoosePicture().open()
@@ -1005,7 +1034,8 @@ class PictureTab(BoxLayout, MDTabsBase):
             print("wrong date format")
         else:
             db = Database()
-            db.cursor.execute(f"UPDATE Entry SET e_date = '{currdate.date()}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
+            db.cursor.execute(
+                f"UPDATE Entry SET e_date = '{currdate.date()}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
             db.conn.commit()
 
 
@@ -1052,7 +1082,7 @@ class PainTab(BoxLayout, MDTabsBase):
 
     def on_pain_change(self, widget):
         # Updatet Pain Value zum Slider
-        if(len(self.ids.painmeter.text) == 7):
+        if (len(self.ids.painmeter.text) == 7):
             self.ids.painmeter.text = self.ids.painmeter.text.rstrip(self.ids.painmeter.text[-1])
             self.ids.painmeter.text += str(int(widget.value))
         else:
@@ -1064,11 +1094,11 @@ class PainTab(BoxLayout, MDTabsBase):
         colorpicker = MDColorPicker(
             size_hint=(0.45, 0.85),
             type_color='HEX'
-            #default_color=self.currcolor
+            # default_color=self.currcolor
         )
         colorpicker.bind(on_release=self.on_new_color_clicked)
         colorpicker.open()
-        #self.ids.colorbox
+        # self.ids.colorbox
 
     def on_new_color_clicked(self, widget, type, rgba):
         rgb = tuple(widget.get_rgb(rgba))
@@ -1096,10 +1126,14 @@ class PainTab(BoxLayout, MDTabsBase):
             anomaly = 1
         if self.ids.diameterbutton.text != '':
             diameter = float(self.ids.diameterbutton.text[:-3])
-        db.cursor.execute(f"UPDATE Entry SET e_color = '{self.currcolor}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
-        db.cursor.execute(f"UPDATE Entry SET e_pain = '{pain}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
-        db.cursor.execute(f"UPDATE Entry SET e_diameter = '{diameter}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
-        db.cursor.execute(f"UPDATE Entry SET e_anomaly = '{anomaly}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
+        db.cursor.execute(
+            f"UPDATE Entry SET e_color = '{self.currcolor}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
+        db.cursor.execute(
+            f"UPDATE Entry SET e_pain = '{pain}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
+        db.cursor.execute(
+            f"UPDATE Entry SET e_diameter = '{diameter}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
+        db.cursor.execute(
+            f"UPDATE Entry SET e_anomaly = '{anomaly}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
         db.conn.commit()
         db.close()
 
@@ -1109,10 +1143,12 @@ class NotesTab(BoxLayout, MDTabsBase):
         db = Database()
         if App.get_running_app().isdoctor:
             pass
-            #notesfromdoctor muss hinzugefügt werden
-            db.cursor.execute(f"UPDATE Entry SET e_notesfromdoctor = '{self.children[0].text}' WHERE e_id = {currentry}")
+            # notesfromdoctor muss hinzugefügt werden
+            db.cursor.execute(
+                f"UPDATE Entry SET e_notesfromdoctor = '{self.children[0].text}' WHERE e_id = {currentry}")
         else:
-            db.cursor.execute(f"UPDATE Entry SET e_notes = '{self.children[2].text}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
+            db.cursor.execute(
+                f"UPDATE Entry SET e_notes = '{self.children[2].text}' WHERE e_id = {currentry} AND e_pr_id = {currprotocol} AND e_pr_p_id = {curruserid}")
         db.conn.commit()
         db.close()
 
@@ -1148,7 +1184,7 @@ class Entrys(Popup):
             height="60dp",
             background_normal='',
             background_color=(.23, .34, .45, 1),
-            #background_color=(App.get_running_app().lightblue),
+            # background_color=(App.get_running_app().lightblue),
             text="+",
             font_size="45dp",
             on_release=self.on_new_entry_release
@@ -1177,7 +1213,8 @@ class Entrys(Popup):
         global currentry
         tempid = 0
         db = Database()
-        db.cursor.execute(f"INSERT INTO Entry(e_pr_id, e_pr_p_id, e_date) VALUES({currprotocol}, {curruserid}, '{datetime.today().strftime('%Y-%m-%d')}')")
+        db.cursor.execute(
+            f"INSERT INTO Entry(e_pr_id, e_pr_p_id, e_date) VALUES({currprotocol}, {curruserid}, '{datetime.today().strftime('%Y-%m-%d')}')")
         db.conn.commit()
         db.cursor.execute(f"SELECT e_id FROM Entry WHERE e_pr_id = {currprotocol}")
         # kriegt jetziges entry id
@@ -1223,7 +1260,7 @@ class NewProtocoll(Popup):
         # muss zuerst screen instanzieren, um dessen draw_protocol funktion aufzurufen. dient dazu, upyudaten nach neuem protocol.
         patscreen = App.get_running_app().root.ids.DermoScreens.get_screen('patientscreen')
         patscreen.children[0].children[1].children[0].children[1].draw_protocol()
-        #patscreen.children[0].children[1].children[0].draw_protocol()
+        # patscreen.children[0].children[1].children[0].draw_protocol()
         # print(PatientScreen.children.get(0))
         # .children[1].children[0].draw_protocol()
         # newprotocol = Protocol()
@@ -1234,13 +1271,13 @@ class ChoosePicture(Popup):
     file_manager = MDFileManager
 
     def on_fromfolder(self, widget):
-        #request_permissions([Permission.WRITE_EXTERNAL_STORAGE, Permission.READ_EXTERNAL_STORAGE])
+        # request_permissions([Permission.WRITE_EXTERNAL_STORAGE, Permission.READ_EXTERNAL_STORAGE])
         path = os.path.expanduser("~")  # path to the directory that will be opened in the file manager
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,  # function called when the user reaches directory tree root
             select_path=self.select_path,  # function called when selecting a file/directory
             preview=True,
-            #icon_folder="Images/User_DermoPEL.png"
+            # icon_folder="Images/User_DermoPEL.png"
         )
         self.file_manager.show(path)
 
@@ -1256,7 +1293,7 @@ class ChoosePicture(Popup):
         db.conn.commit()
         toast(path)
         tab = self.parent.children[3].children[0].children[0].children[0].children[1].get_slides()[0]
-        #print(self.parent.children)
+        # print(self.parent.children)
         createimgs(imgblob)
         tab.children[1].background_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
         tab.children[1].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down.png'
@@ -1271,17 +1308,17 @@ class ChoosePicture(Popup):
 
 
 class ConfirmPicture(Popup):
-    #def on_open(self):
-        #self.ids.entryimg.source = f'Temp/selfie{currimg}.png'
+    # def on_open(self):
+    # self.ids.entryimg.source = f'Temp/selfie{currimg}.png'
 
     def on_confirm_release(self, widget):
         # DB behaviour!
         db = Database()
-#        imgblob = convertdata(f'Temp/selfie{currimg}.png')
+        #        imgblob = convertdata(f'Temp/selfie{currimg}.png')
         imgblob = bytearray(convertdata(f'Temp/selfie{currimg}.png'))
-        #query = "UPDATE entry SET e_picture = %s WHERE e_id = %s"
-        #values = (imgblob, currentry)
-        #db.cursor.execute(query, values)
+        # query = "UPDATE entry SET e_picture = %s WHERE e_id = %s"
+        # values = (imgblob, currentry)
+        # db.cursor.execute(query, values)
         query = f"UPDATE entry SET e_picture = %s WHERE e_id = {currentry}"
         values = (imgblob,)
         db.cursor.execute(query, values)
@@ -1292,12 +1329,13 @@ class ConfirmPicture(Popup):
 
     def on_dismiss(self):
         global currimg
-        #os.remove(f'Temp/selfie{currimg}.png')
+        # os.remove(f'Temp/selfie{currimg}.png')
         currimg = currimg + 1
 
 
 class LoginOrSignUpError(Popup):
     loginorsignuperrormsg = StringProperty()
+
 
 class ConfirmAction(Popup):
     msg = StringProperty()
@@ -1311,16 +1349,139 @@ class ConfirmAction(Popup):
         self.dismiss()
 
 
+class ChooseDoctor(Popup):
+    doclist = []
+    docdropdown = DropDown
+
+    def on_open(self):
+        db = Database()
+        db.cursor.execute(f"SELECT * FROM Doctor")
+        self.doclist = db.cursor.fetchall()
+        self.docdropdown = DropDown(
+            size_hint=(.5, 1)
+        )
+        """for doc in self.doclist:
+            item = Button(
+                text=doc[1],
+                size_hint_x=.5,
+                size_hint_y=None,
+                height="40dp",
+                border=(20, 20, 20, 20),
+                background='',
+                background_color=App.get_running_app().darkblue,
+                color=App.get_running_app().lightblue,
+                bold=True,
+                font_size="20dp"
+            )
+            item.bind(on_release=lambda x, button=item: self.docdropdown.select(button.text))
+            self.docdropdown.add_widget(item)
+            self.docdropdown.bind(on_select=lambda instance, x: setattr(self.ids.search_docbox, 'text', x))"""
+
+    def on_search_doc(self, widget):
+        # print(widget.text)
+        if widget.text != '':
+            searchresult = []
+            self.docdropdown.clear_widgets()
+            # for x in self.docdropdown.children[0].children:
+            #    self.docdropdown.remove_widget(x)
+            # self.docdropdown.clear_widgets(self)
+            for i in self.doclist:
+                if i[1][:len(widget.text)] == widget.text or i[1][:len(widget.text)] == widget.text.title():
+                    """item = Button(
+                        text=i[1],
+                        size_hint_x=.5,
+                        size_hint_y=None,
+                        height="40dp",
+                        border=(20, 20, 20, 20),
+                        background='',
+                        background_color=App.get_running_app().darkblue,
+                        color=App.get_running_app().lightblue,
+                        bold=True,
+                        font_size="20dp"
+                    )
+                    #item.bind(on_release=lambda x, button=item: self.docdropdown.select(button.text))
+                    self.docdropdown.add_widget(item)
+                    #self.docdropdown.bind(on_select=lambda instance, x: setattr(self.ids.search_docbox, 'text', x))"""
+                    searchresult.append(i[1])
+                # print(i[1][:len(widget.text)])
+            # print(searchresult)
+            # print(set(searchresult))
+            try:
+                for j in set(searchresult):
+                    item = Button(
+                        text=j,
+                        size_hint_x=.5,
+                        size_hint_y=None,
+                        height="40dp",
+                        border=(20, 20, 20, 20),
+                        background='',
+                        background_color=App.get_running_app().darkblue,
+                        color=App.get_running_app().lightblue,
+                        bold=True,
+                        font_size="20dp"
+                    )
+                    item.bind(on_release=lambda x, button=item: self.docdropdown.select(button.text))
+                    #item.bind(on_release=lambda x, button=item: self.ids.search_docbox.text)
+                    self.docdropdown.add_widget(item)
+                    self.docdropdown.bind(
+                        on_select=lambda instance, x: setattr(self.ids.search_docbox, 'text', x))
+            except:
+                print("recursion error")
+            # for t in self.docdropdown.children[0].children:
+            #    print(t.text)
+            # self.on_open_dropdown(widget)
+            # self.docdropdown.open(self.ids.search_docbox)
+
+    def on_open_dropdown(self, widget):
+        self.docdropdown.open(widget)
+
+    def on_save_doc(self, widget):
+        db = Database()
+        #db.cursor.execute(f"UPDATE Patient SET WHERE p_id = {curruserid}")
+        #if self.ids.search_docbox.text in self.doclist:
+        #    print("works")
+        t = False
+        for doc in self.doclist:
+            if self.ids.search_docbox.text == doc[1] or self.ids.search_docbox.text.title() == doc[1]:
+                db.cursor.execute(f"UPDATE Patient SET p_d_treatingdoctor = {doc[0]} WHERE p_id = {curruserid}")
+                db.conn.commit()
+                Snackbar(
+                    text="[color=#0824AA]doctor was saved![/color]",
+                    snackbar_x="10dp",
+                    snackbar_y="10dp",
+                    bg_color=App.get_running_app().lightblue,
+                    font_size="20dp",
+                    radius=(20, 20, 20, 20),
+                    size_hint_x=(
+                                        Window.width - (dp(10) * 2)
+                                ) / Window.width
+                ).open()
+                t = True
+        if not t:
+            Snackbar(
+                text="[color=#0824AA]this doctor does not exist.[/color]",
+                snackbar_x="10dp",
+                snackbar_y="10dp",
+                bg_color=App.get_running_app().lightblue,
+                font_size="20dp",
+                radius=(20, 20, 20, 20),
+                size_hint_x=(
+                                    Window.width - (dp(10) * 2)
+                            ) / Window.width
+            ).open()
+
+
+
 # -----------------------------------------------------
 # App
 # -----------------------------------------------------
 
 
 class DermoPELApp(MDApp):
-    #Farben
+    # Farben
     isdoctor = BooleanProperty(False)
     istreating = BooleanProperty(False)
-    #canupdate = BooleanProperty(False)
+    # canupdate = BooleanProperty(False)
     darkbluehx = StringProperty('#0824aa')
     lightbluehx = StringProperty('#ccf2ff')
     greybluehx = StringProperty('#a6c8e0')
@@ -1330,11 +1491,10 @@ class DermoPELApp(MDApp):
     greyblue = ColorProperty([.65, .78, .88, 1])
     grey = ColorProperty([.92, .92, .92, 1])
 
-    def on_resize(self, win,  width, height):
-        #print(str(width) + ' ' + str(height))
+    def on_resize(self, win, width, height):
+        # print(str(width) + ' ' + str(height))
         patscreen = App.get_running_app().root.ids.DermoScreens.get_screen('patientscreen')
         patscreen.on_enter()
-
 
     def build(self):
         self.icon = 'Images/Logokreis_DermoPEL.png'
@@ -1346,10 +1506,10 @@ class DermoPELApp(MDApp):
         else:
             pass
             # Window sizes Samsung A12
-            #Window.size = (650, 600)
+            # Window.size = (650, 600)
             # Window.size = (360, 800)
-        #patscreen = App.get_running_app().root.ids.DermoScreens.get_screen('patientscreen')
-        #patscreen.children[0].children[1].children[0].children[0].width = dp(100)
+        # patscreen = App.get_running_app().root.ids.DermoScreens.get_screen('patientscreen')
+        # patscreen.children[0].children[1].children[0].children[0].width = dp(100)
         global curruserid
         db = Database()
         db.cursor.execute("SELECT * FROM Patient")
@@ -1358,10 +1518,10 @@ class DermoPELApp(MDApp):
         ddebug = db.cursor.fetchall()
         db.cursor.execute("SELECT * FROM Protocol")
         prdebug = db.cursor.fetchall()
-        #db.cursor.execute("SELECT * FROM Entry")
-        #edebug = db.cursor.fetchall()
+        # db.cursor.execute("SELECT * FROM Entry")
+        # edebug = db.cursor.fetchall()
         print("Patients: " + str(pdebug) + "\nDoctors: " + str(ddebug) + "\nProtocols: " + str(
-            prdebug))# + "\nEntrys: " + str(edebug))
+            prdebug))  # + "\nEntrys: " + str(edebug))
 
         self.root = Display()
         if store.exists('curruserjson'):

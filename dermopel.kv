@@ -700,7 +700,11 @@ Display:
             on_release:
                 app.root.ids.DermoScreens.transition = CardTransition()
                 app.root.ids.DermoScreens.transition.direction = 'right'
-                app.root.ids.DermoScreens.current = 'doctorscreen' if app.istreating else 'settingsscreen'
+                app.root.ids.DermoScreens.current = 'doctorscreen' if app.istreating else Factory.ChooseDoctor().open()
+            #on_release:
+            #    app.root.ids.DermoScreens.transition = CardTransition()
+            #    app.root.ids.DermoScreens.transition.direction = 'right'
+            #    app.root.ids.DermoScreens.current = 'doctorscreen' if app.istreating else 'settingsscreen'
     Button:
         size_hint: None, None
         size: "50dp", "50dp"
@@ -1633,7 +1637,7 @@ Display:
             on_release: root.on_protocol_delete(self)
 
 <NewProtocoll>
-    size_hint: .4, .4
+    size_hint: .7, .4
     separator_color: app.darkblue
     background: ''
     background_color: app.greyblue
@@ -1807,6 +1811,41 @@ Display:
                 text: "dismiss"
                 on_release: root.dismiss()
 
+<ChooseDoctor>
+    size_hint: .7, .4
+    separator_color: app.darkblue
+    background: ''
+    background_color: app.greyblue
+    title: "Choose Doctor"
+    title_align: "center"
+    title_color: 0, 0, 0, 1
+    BoxLayout:
+        orientation: "vertical"
+        spacing: "60dp"
+        valign: "top"
+        #pos_hint: {"center_y": .65}
+        TextInput:
+            id: search_docbox
+            size_hint: 1, None
+            height: "40dp"
+            halign: "center"
+            font_size: "20dp"
+            cursor_color: app.greyblue
+            #cursor_color: app.darkblue
+            multiline: False
+            hint_text: "Doctor?"
+            on_cursor: root.on_search_doc(self)
+            on_text_validate: root.on_open_dropdown(self)
+        Button:
+            size_hint: None, None
+            size: "80dp", "30dp"
+            pos_hint: {"center_x": .5}
+            # Kivy setzt den Hintergrund zu einem Image, um es zu einer Farbe zu machen dieser Code:
+            background: ''
+            background_color: app.darkblue
+            text: "Save"
+            # Hier fehlt DB INSERT
+            on_release: root.on_save_doc(self), root.dismiss()
 
 #<DoctorChoose>
 #hier kommt popup, wo arzt entscheidet, ob dieser die stammdaten oder die protokolle einsehen möchte.

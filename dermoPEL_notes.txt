@@ -8,7 +8,14 @@
 4X Patient muss seine Stammdaten angeben, bevor dieser Protokolle erstellen kann
 5 Kamera
 6X Patient muss Arzt angeben können
-7 tempimages zu tempdirectorys ändern, und dann ganze dirs löschen+
+7 tempimages zu tempdirectorys ändern, und dann ganze dirs löschen
+
+
+---
+-Errors
+---
+
+1 Recursion Error bei Arztauswahl, wenn mehrere Ärzte verfügber sind.
 
 
 
@@ -24,7 +31,8 @@
 5 Hero von Protocol-Icon
 6 Stammdaten erweitern
 7X es fehlt user deletion + arztscreen
-8 message hinzufügen, für wenn der Arzt keine Patienten hat.
+8 message hinzufügen, für wenn der Arzt keine Patienten hat
+9 Snackbars hinzufügen, wenn gespeichert wird
 
 
 !!! https://www.youtube.com/watch?v=EupAeyL8zAo !!!
