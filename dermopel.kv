@@ -700,7 +700,7 @@ Display:
     size_hint: 1, None
     height: "80dp"
     disabe: False if not app.isdoctor else True
-    clr: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+    clr: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, 0)
     canvas.before:
         Color:
             rgba: app.lightblue
@@ -738,7 +738,7 @@ Display:
         background_disabled_down: "Images/New_Protocoll_Down_DermoPEL.png"
         #app.root.ids.DermoScreens.current = 'patientscreen' if not app.isdoctor else 'doctorscreen'
         disabled: False if not app.isdoctor else True
-        background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+        background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, 0)
         on_release:
             Factory.NewProtocoll().open()
     AnchorLayout:
@@ -1486,6 +1486,7 @@ Display:
     padding: ("5dp", "25dp", "5dp", "25dp")
     size_hint: 1, None
     height: "70dp"
+    dis: True if not app.isdoctor else False
     canvas.before:
         Color:
             rgba: app.lightblue
@@ -1525,8 +1526,8 @@ Display:
                 background_down: "Images/SaveEntry_Down_DermoPEL.png"
                 background_disabled_normal: "Images/SaveEntry_DermoPEL.png"
                 background_disabled_down: "Images/SaveEntry_Down_DermoPEL.png"
-                #disabled: False if not app.isdoctor else True
-                #background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+                disabled: root.dis if not app.istreating else False
+                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, 0)
                 on_release: root.on_save_release(self)
 
 <ProfileBar>
@@ -1557,7 +1558,7 @@ Display:
                 background_disabled_normal: "Images/Logout_DermoPEL.png"
                 background_disabled_down: "Images/Logout_Down_DermoPEL.png"
                 disabled: False if not app.isdoctor else True
-                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, 0)
                 on_release: root.on_logout(self)
         AnchorLayout:
             anchor_x: "center"
@@ -1574,7 +1575,7 @@ Display:
                 background_disabled_normal: "Images/SaveEntry_DermoPEL.png"
                 background_disabled_down: "Images/SaveEntry_Down_DermoPEL.png"
                 disabled: False if not app.isdoctor else True
-                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, 0)
                 on_release: root.on_save_profile(self)
         AnchorLayout:
             anchor_x: "right"
@@ -1589,7 +1590,7 @@ Display:
                 background_disabled_normal: "Images/Delete_DermoPEL.png"
                 background_disabled_down: "Images/Delete_Down_DermoPEL.png"
                 disabled: False if not app.isdoctor else True
-                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
+                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, 0)
                 on_release: root.on_patient_delete(self)
 
 <TopBar@BoxLayout>

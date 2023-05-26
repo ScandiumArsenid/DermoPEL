@@ -10,6 +10,7 @@
 6X Patient muss Arzt angeben können
 7X tempimages zu tempdirectorys ändern, und dann ganze dirs löschen
 8 Tutorial fertigstellen und Symbol ändern
+9 Logo auf Stammdatenscreen von Arzt
 
 
 ---
@@ -17,6 +18,7 @@
 ---
 
 1 Recursion Error bei Arztauswahl, wenn mehrere Ärzte verfügber sind.
+2 error bei entry in neuem protocol
 
 
 
