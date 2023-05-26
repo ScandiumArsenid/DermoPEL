@@ -151,6 +151,14 @@
         FEHLERHAFT! Fotos werden weiß angezeigt
         Sarmiento tobias
 
+    DermoPEL Version 21.3:
+        Bilder behoben, funktionieren nun.
+        Sarmiento Tobias
+
+    DermoPEL Version 21.4:
+        Tutorial angefangen
+        Sarmiento Tobias
+
 -----------------------------------------------------
 """
 # Bug: bei erstmaligem einloggen werden protokolle nicht angezeigt! fixed!!!

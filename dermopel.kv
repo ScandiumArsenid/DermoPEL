@@ -22,6 +22,7 @@ Display:
         #DoctorProfileScreen:
         ProfileSelectionScreen:
         SettingsScreen:
+        TutorialScreen:
 
 #-----------------------------------------------------
 #Screens
@@ -153,6 +154,22 @@ Display:
             topbarhomebuttonplacement: "right"
             transitiondirection: 'left'
         Setting:
+
+<TutorialScreen@Screen>
+    name: 'tutorialscreen'
+    canvas.before:
+        Color:
+            rgba: app.greyblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
+    BoxLayout:
+        orientation: "vertical"
+        LogoTopBar:
+        TutorialMiddle:
+        TopBar:
+            topbarhomebuttonplacement: "left"
+            transitiondirection: 'right'
 
 #-----------------------------------------------------
 #Content
@@ -682,6 +699,8 @@ Display:
     padding: ("5dp", "25dp", "5dp", "15dp")
     size_hint: 1, None
     height: "80dp"
+    disabe: False if not app.isdoctor else True
+    clr: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, .5)
     canvas.before:
         Color:
             rgba: app.lightblue
@@ -697,6 +716,10 @@ Display:
             border: (0, 0, 0, 0)
             background_normal: "Images/Settings_DermoPEL.png" if not app.istreating else "Images/Return_DermoPEL.png"
             background_down: "Images/Settings_Down_DermoPEL.png" if not app.istreating else "Images/Return_Down_DermoPEL.png"
+            background_disabled_normal: "Images/Settings_DermoPEL.png" if not app.istreating else "Images/Return_DermoPEL.png"
+            background_disabled_down: "Images/Settings_Down_DermoPEL.png" if not app.istreating else "Images/Return_Down_DermoPEL.png"
+            disabled: root.disabe if not app.istreating else False
+            background_color: root.clr if not app.istreating else (1, 1, 1, 1)
             on_release:
                 app.root.ids.DermoScreens.transition = CardTransition()
                 app.root.ids.DermoScreens.transition.direction = 'right'
@@ -729,7 +752,9 @@ Display:
             background_down: "Images/Assistant_Down_DermoPEL.png"
             on_press:
                 #wenn assistant:
-                #app.root.ids.DermoScreens.current = 'assistantscreen'
+                app.root.ids.DermoScreens.transition = CardTransition()
+                app.root.ids.DermoScreens.transition.direction = 'left'
+                app.root.ids.DermoScreens.current = 'tutorialscreen'
 
 <Middle_DoctorScreen@BoxLayout>
     #Hier Scrollview, da man durch Protokolle scrollen soll.
@@ -1599,6 +1624,120 @@ Display:
                     app.root.ids.DermoScreens.transition = root.transitiontype
                     app.root.ids.DermoScreens.transition.direction = root.transitiondirection
                     app.root.ids.DermoScreens.current = root.enterscreen if not app.istreating else "patientscreen"
+
+<TutorialMiddle@ScrollView>
+    Tutorial:
+        size_hint_y: None
+        height: self.minimum_height
+
+<Tutorial@BoxLayout>
+    orientation: "vertical"
+    #size_hint: .9, 1
+    pos_hint: {"center_x": .5, "center_y": .5}
+    padding: "20dp"
+    spacing: "20dp"
+    Label:
+        text_size: self.size
+        size_hint: .9, None
+        height: "60dp"
+        #valign: "top"
+        halign: "center"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        font_size: "60dp"
+        text: "Tutorial"
+        color: app.darkblue
+        bold: True
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rounded_rectangle: self.x, self.y + dp(5), self.width, self.height, 20
+    Label:
+        text_size: self.size
+        size_hint_y: None
+        valign: "top"
+        halign: "center"
+        font_size: "20dp"
+        #shorten: True
+        color: app.darkblue
+        text: "Welcome to DermoPEL!\nThis Application has two distinct Account options:\ndoctor or patient."
+    Label:
+        id: pati
+        text_size: self.size
+        size_hint: .9, None
+        height: "40dp"
+        #valign: "top"
+        halign: "center"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        font_size: "40dp"
+        text: "Patient"
+        color: app.darkblue
+        bold: True
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: self.x, self.y - self.height / 4, self.width, self.height / 999
+                #line: self.x, self.y
+                #pos: self.x, self.y
+    Label:
+        text_size: self.size
+        size_hint_y: None
+        #height: "80dp"
+        valign: "top"
+        halign: "center"
+        font_size: "20dp"
+        color: app.darkblue
+        text: "The first thing you will have to do after creating your account, is to fill out your personal data for your treating doctor.\nYou can reach this screen through this symbol:"
+    Button:
+        size_hint: None, None
+        size: "85dp", "85dp"
+        pos_hint: {"center_x": .5}
+        #valign: "top"
+        background: ''
+        background_normal: "Images/User_Down_DermoPEL.png"
+        background_down: "Images/User_DermoPEL.png"
+        border: 0, 0, 0, 0
+        text: "\n\n\n\n\n\n(press me!)"
+        color: app.darkblue
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: pati.x + pati.width / 4, self.y - self.height / 3, pati.width / 2, self.height / 999
+                #rectangle: self.center_x - (self.width * 3), self.y - self.height / 4 - dp(15), self.width * 6, self.height / 999
+    Widget:
+        size_hint_y: None
+        height: "40dp"
+    Label:
+        text_size: self.size
+        size_hint_y: None
+        #height: "80dp"
+        valign: "top"
+        halign: "center"
+        font_size: "20dp"
+        color: app.darkblue
+        text: "after filling in your data, you will have to save it.\nThis can be done through pressing this symbol:"
+    Button:
+        size_hint: None, None
+        size: "85dp", "85dp"
+        pos_hint: {"center_x": .5}
+        #valign: "top"
+        background: ''
+        background_normal: "Images/SaveEntry_Down_DermoPEL.png"
+        background_down: "Images/SaveEntry_DermoPEL.png"
+        border: 0, 0, 0, 0
+        text: "\n\n\n\n\n\n(press me!)"
+        color: app.darkblue
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: pati.x + pati.width / 4, self.y - self.height / 3, pati.width / 2, self.height / 999
 
 <Entrys>
     size_hint: .75, .75
