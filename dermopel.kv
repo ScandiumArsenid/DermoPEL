@@ -70,6 +70,12 @@ Display:
 
 <CameraScreen>
     name: 'camerascreen'
+    canvas.before:
+        Color:
+            rgba: app.greyblue
+        Rectangle:
+            size: self.size
+            pos: self.pos
     EntryCamera:
 
 <ProfileScreen>
@@ -174,20 +180,20 @@ Display:
 #-----------------------------------------------------
 #Content
 #-----------------------------------------------------
-#<EntryCamera>
-#    orientation: 'vertical'
-#    padding: "10dp"
-#    Camera:
-#        id: entrycam
-#        #resolution: (800, 800)
-#    Button:
-#        size_hint: None, None
-#        size: "100dp", "100dp"
-#        pos_hint: {"center_x": .5}
-#        border: (0, 0, 0, 0)
-#        background_normal: "Images/New_Protocoll_Down_DermoPEL.png"
-#        background_down: "Images/New_Protocoll_DermoPEL.png"
-#        on_release: root.on_takepicture(self)
+<EntryCamera>
+    orientation: 'vertical'
+    padding: "10dp"
+    Camera:
+        id: entrycam
+        resolution: (1080, 1440) if app.platform == 'android' else (1440, 1080)
+    Button:
+        size_hint: None, None
+        size: "100dp", "100dp"
+        pos_hint: {"center_x": .5}
+        border: (0, 0, 0, 0)
+        background_normal: "Images/New_Protocoll_Down_DermoPEL.png"
+        background_down: "Images/New_Protocoll_DermoPEL.png"
+        on_release: root.on_takepicture(self)
 
 <Welcome@BoxLayout>
     #Hier kommt die Begrüßungsnachricht, welche bei öffnen der App aufgerufen wird.
@@ -453,30 +459,27 @@ Display:
         title: "Notes"
 
 <PictureTab>
-    padding: "20dp"
+    padding: "20dp", "0dp", "20dp", "20dp"
     orientation: "vertical"
     pos_hint: {"center_x":.5}
     halign: "center"
     valign: "middle"
     spacing: "40dp"
+    Widget:
     Button:
         id: pic_button
         size_hint: 1, None
-        height: self.width
-        canvas.before:
-            Color:
-                rgba: app.darkblue
-            Line:
-                width: dp(1)
-                rectangle: self.x, self.y, self.width, self.height
+        height: self.width / 1080 * 1440 if app.platform == 'android' else self.width / 1440 * 1080
         #height: "400dp"
         halign: "center"
+        #pos_hint: {"center_y": .5}
         background_normal: 'Images/New_Pic_DermoPEL.png'
         background_down: 'Images/New_Pic_Down_DermoPEL.png'
         background_disabled_normal: self.background_normal
         on_release: root.on_new_picture(self)
     BoxLayout:
         size_hint: .75, 1
+        #height: "40dp"
         pos_hint: {"center_x": .5}
         LimitInput:
             id: datebox
@@ -714,10 +717,10 @@ Display:
             size_hint: None, None
             size: "50dp", "50dp"
             border: (0, 0, 0, 0)
-            background_normal: "Images/Settings_DermoPEL.png" if not app.istreating else "Images/Return_DermoPEL.png"
-            background_down: "Images/Settings_Down_DermoPEL.png" if not app.istreating else "Images/Return_Down_DermoPEL.png"
-            background_disabled_normal: "Images/Settings_DermoPEL.png" if not app.istreating else "Images/Return_DermoPEL.png"
-            background_disabled_down: "Images/Settings_Down_DermoPEL.png" if not app.istreating else "Images/Return_Down_DermoPEL.png"
+            background_normal: "Images/Search_Doctor_DermoPEL.png" if not app.istreating else "Images/Return_DermoPEL.png"
+            background_down: "Images/Search_Doctor_Down_DermoPEL.png" if not app.istreating else "Images/Return_Down_DermoPEL.png"
+            background_disabled_normal: "Images/Search_Doctor_DermoPEL.png" if not app.istreating else "Images/Return_DermoPEL.png"
+            background_disabled_down: "Images/Search_Doctor_Down_DermoPEL.png" if not app.istreating else "Images/Return_Down_DermoPEL.png"
             disabled: root.disabe if not app.istreating else False
             background_color: root.clr if not app.istreating else (1, 1, 1, 1)
             on_release:
@@ -748,9 +751,9 @@ Display:
             size_hint: None, None
             size: "50dp", "50dp"
             border: (0, 0, 0, 0)
-            background_normal: "Images/Assistant_DermoPEL.png"
-            background_down: "Images/Assistant_Down_DermoPEL.png"
-            on_press:
+            background_normal: "Images/Tutorial_DermoPEL.png"
+            background_down: "Images/Tutorial_Down_DermoPEL.png"
+            on_release:
                 #wenn assistant:
                 app.root.ids.DermoScreens.transition = CardTransition()
                 app.root.ids.DermoScreens.transition.direction = 'left'
@@ -1486,7 +1489,7 @@ Display:
     padding: ("5dp", "25dp", "5dp", "25dp")
     size_hint: 1, None
     height: "70dp"
-    dis: True if not app.isdoctor else False
+    #dis: False if not app.isdoctor else True
     canvas.before:
         Color:
             rgba: app.lightblue
@@ -1526,8 +1529,8 @@ Display:
                 background_down: "Images/SaveEntry_Down_DermoPEL.png"
                 background_disabled_normal: "Images/SaveEntry_DermoPEL.png"
                 background_disabled_down: "Images/SaveEntry_Down_DermoPEL.png"
-                disabled: root.dis if not app.istreating else False
-                background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, 0)
+                #disabled: root.dis if not app.istreating else False
+                #background_color: (1, 1, 1, 1) if not app.isdoctor else (0, 0, 0, 0)
                 on_release: root.on_save_release(self)
 
 <ProfileBar>
@@ -1686,12 +1689,12 @@ Display:
     Label:
         text_size: self.size
         size_hint_y: None
-        #height: "80dp"
+        height: "150dp"
         valign: "top"
         halign: "center"
         font_size: "20dp"
         color: app.darkblue
-        text: "The first thing you will have to do after creating your account, is to fill out your personal data for your treating doctor.\nYou can reach this screen through this symbol:"
+        text: "The first thing you will have to do after creating your account, is to fill out your personal data for your treating doctor.\nYou can reach the screen through this symbol:"
     Button:
         size_hint: None, None
         size: "85dp", "85dp"
@@ -1739,6 +1742,203 @@ Display:
             Line:
                 width: dp(1)
                 rectangle: pati.x + pati.width / 4, self.y - self.height / 3, pati.width / 2, self.height / 999
+    Widget:
+        size_hint_y: None
+        height: "40dp"
+    Label:
+        text_size: self.size
+        size_hint_y: None
+        height: "275dp"
+        valign: "top"
+        halign: "center"
+        font_size: "20dp"
+        color: app.darkblue
+        text: "If you have a treating doctor, you can search their username and add them as your treating doctor.\nThis can be done through entering the username in the searchbar and pressing enter.\nThen just select your doctor and confirm.\nThe searchbar can be accessed through this button:"
+    Button:
+        size_hint: None, None
+        size: "85dp", "85dp"
+        pos_hint: {"center_x": .5}
+        #valign: "top"
+        background: ''
+        background_normal: "Images/Search_Doctor_Down_DermoPEL.png"
+        background_down: "Images/Search_Doctor_DermoPEL.png"
+        border: 0, 0, 0, 0
+        text: "\n\n\n\n\n\n(press me!)"
+        color: app.darkblue
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: pati.x + pati.width / 4, self.y - self.height / 3, pati.width / 2, self.height / 999
+    Widget:
+        size_hint_y: None
+        height: "40dp"
+    Label:
+        text_size: self.size
+        size_hint_y: None
+        height: "150dp"
+        valign: "top"
+        halign: "center"
+        font_size: "20dp"
+        color: app.darkblue
+        text: "After finishing all these steps, you can create your first protocol.\nDo this by pressing this Button, which creates a new protocol.\nNow enter a name and save."
+    Button:
+        size_hint: None, None
+        size: "85dp", "85dp"
+        pos_hint: {"center_x": .5}
+        #valign: "top"
+        background: ''
+        background_normal: "Images/New_Protocoll_DermoPEL.png"
+        background_down: "Images/New_Protocoll_Down_DermoPEL.png"
+        border: 0, 0, 0, 0
+        text: "\n\n\n\n\n\n(press me!)"
+        color: app.darkblue
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: pati.x + pati.width / 4, self.y - self.height / 3, pati.width / 2, self.height / 999
+    Widget:
+        size_hint_y: None
+        height: "40dp"
+    Label:
+        text_size: self.size
+        size_hint_y: None
+        height: "275dp"
+        valign: "top"
+        halign: "center"
+        font_size: "20dp"
+        color: app.darkblue
+        text: "After selecting a protocol, you can create a new Entry.\nIf this doesn't work, check if your profile is filled out.\nNow you can describe your disease or wound with different visual factors.\nThere are three different tabs:\nPicture, State and Notes.\nYou also will have to save the Entry through the Save Symbol."
+    #Widget:
+    #    size_hint_y: None
+    #   height: "40dp"
+    Label:
+        text_size: self.size
+        size_hint: .9, None
+        height: "40dp"
+        #valign: "top"
+        halign: "center"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        font_size: "40dp"
+        text: "Doctor"
+        color: app.darkblue
+        bold: True
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: self.x, self.y - self.height / 4, self.width, self.height / 999
+    #Widget:
+    #    size_hint_y: None
+    #    height: "40dp"
+    Label:
+        text_size: self.size
+        size_hint_y: None
+        height: "225dp"
+        valign: "top"
+        halign: "center"
+        font_size: "20dp"
+        color: app.darkblue
+        text: "When logging into your account as a doctor,\nyou should see your patients.\nIf not, try checking if your patients have added you as their doctor.\n\nAfter selecting your patient,\nyou can either look at a protocol by pressing this:"
+    Button:
+        size_hint: None, None
+        size: "100dp", "100dp"
+        #pos_hint: None, None
+        #pos: self.parent.width / 2,  self.parent.height / 2
+        #valign: "top"
+        pos_hint: {"center_x": .5, "center_Y": .5}
+        background: ''
+        background_normal: "Images/Folder_DermoPEL.png"
+        background_down: "Images/Folder_Down_DermoPEL.png"
+        border: 0, 0, 0, 0
+        text: "\n\n\n\n\n\n(press me!)"
+        color: app.darkblue
+    Widget:
+        size_hint_y: None
+        height: "40dp"
+    Label:
+        text_size: self.size
+        size_hint_y: None
+        height: "50dp"
+        valign: "top"
+        halign: "center"
+        font_size: "20dp"
+        color: app.darkblue
+        text: "Or look at the patients data by pressing this:"
+    Button:
+        size_hint: None, None
+        size: "85dp", "85dp"
+        pos_hint: {"center_x": .5, "center_Y": .5}
+        #valign: "top"
+        background: ''
+        background_normal: "Images/Patient_Info_Down_DermoPEL.png"
+        background_down: "Images/Patient_Info_DermoPEL.png"
+        border: 0, 0, 0, 0
+        text: "\n\n\n\n\n\n(press me!)"
+        color: app.darkblue
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: pati.x + pati.width / 4, self.y - self.height / 3, pati.width / 2, self.height / 999
+    Widget:
+        size_hint_y: None
+        height: "40dp"
+    Label:
+        text_size: self.size
+        size_hint_y: None
+        height: "250dp"
+        valign: "top"
+        halign: "center"
+        font_size: "20dp"
+        color: app.darkblue
+        text: "After choosing an entry in the protocol,\nyou can look all of the info regarding tha disease/wound on that date.\nYou can also add your own notes to the entry.\nFinally, save them through this button:"
+    Button:
+        size_hint: None, None
+        size: "85dp", "85dp"
+        pos_hint: {"center_x": .5, "center_Y": .5}
+        #valign: "top"
+        background: ''
+        background_normal: "Images/SaveEntry_Down_DermoPEL.png"
+        background_down: "Images/SaveEntry_DermoPEL.png"
+        border: 0, 0, 0, 0
+        text: "\n\n\n\n\n\n(press me!)"
+        color: app.darkblue
+        canvas.before:
+            Color:
+                rgba: app.darkblue
+            Line:
+                width: dp(1)
+                rectangle: pati.x, self.y - self.height / 3, pati.width, self.height / 999
+    Widget:
+        size_hint_y: None
+        height: "15dp"
+    BoxLayout:
+        size_hint_y: None
+        height: "55dp"
+        Label:
+            text_size: self.size
+            size_hint_y: None
+            height: "55dp"
+            valign: "top"
+            halign: "center"
+            font_size: "12.5dp"
+            color: app.darkblue
+            text: "Contact:\nSarmiento Tobias\ntobias.sarmiento@icloud.com"
+        Label:
+            text_size: self.size
+            size_hint_y: None
+            height: "55dp"
+            valign: "top"
+            halign: "center"
+            font_size: "12.5dp"
+            color: app.darkblue
+            text: "On behalf of:\nHTLBuVA Spengergasse\nSAR22021@spengergasse.at"
 
 <Entrys>
     size_hint: .75, .75
@@ -1867,6 +2067,7 @@ Display:
                 height: self.width
                 valign: "middle"
                 halign: "center"
+                on_release: root.on_takepic(self)
             Label:
                 text_size: self.size
                 size_hint: 1, .2
@@ -1986,6 +2187,40 @@ Display:
             text: "Save"
             # Hier fehlt DB INSERT
             on_release: root.on_save_doc(self), root.dismiss()
+
+<NoPatientsMsg@BoxLayout>
+    orientation: "vertical"
+    padding: "20dp"
+    spacing: "20dp"
+    #size_hint: None, None
+    #size: "500dp", "175dp"
+    #size_hint: .7, .7
+    pos_hint: {"center_x": .5, "center_y": .5}
+    #canvas.before:
+    #    Color:
+    #        rgba: app.darkblue
+    #    Line:
+    #        width: dp(1)
+    #        rounded_rectangle: self.x + self.width / 8, self.y, self.width - self.width / 4, self.height, 20
+    Image:
+        source: "Images/No_Patients_Down_DermoPEL.png"
+        valign: "bottom"
+    Label:
+        text_size: self.size
+        size_hint_y: .5
+        halign: "center"
+        valign: "bottom"
+        text: "Nobodys here..."
+        font_size: "50dp"
+        color: app.darkblue
+    Label:
+        text_size: self.size
+        size_hint_y: .4
+        halign: "center"
+        valign: "top"
+        text: "Seems like you have no patients yet."
+        font_size: "30dp"
+        color: app.darkblue
 
 #<DoctorChoose>
 #hier kommt popup, wo arzt entscheidet, ob dieser die stammdaten oder die protokolle einsehen möchte.

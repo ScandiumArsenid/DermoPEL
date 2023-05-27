@@ -6,11 +6,11 @@
 2X Arzt muss sowohl Stammdaten als auch Protokolle sehen können
 3X Arzt muss eigene Kommentare hinzfügen können
 4X Patient muss seine Stammdaten angeben, bevor dieser Protokolle erstellen kann
-5 Kamera
+5X Kamera
 6X Patient muss Arzt angeben können
 7X tempimages zu tempdirectorys ändern, und dann ganze dirs löschen
-8 Tutorial fertigstellen und Symbol ändern
-9 Logo auf Stammdatenscreen von Arzt
+8X Tutorial fertigstellen und Symbol ändern
+9X Logo auf Stammdatenscreen von Arzt
 
 
 ---
@@ -18,23 +18,21 @@
 ---
 
 1 Recursion Error bei Arztauswahl, wenn mehrere Ärzte verfügber sind.
-2 error bei entry in neuem protocol
-
-
+2X error bei entry in neuem protocol
 
 
 ---
 -KannZiele
 ---
 
-1 Tutorial erstellen
+1X Tutorial erstellen
 2 Statistiken Seite
 3 Settings Seite
 4 Error handling
 5 Hero von Protocol-Icon
 6 Stammdaten erweitern
 7X es fehlt user deletion + arztscreen
-8 message hinzufügen, für wenn der Arzt keine Patienten hat
+8X message hinzufügen, für wenn der Arzt keine Patienten hat
 9 Snackbars hinzufügen, wenn gespeichert wird
 
 

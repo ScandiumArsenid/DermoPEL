@@ -159,6 +159,12 @@
         Tutorial angefangen
         Sarmiento Tobias
 
+    DermoPEL Version 22:
+        Tutorial und Kamera fertiggestellt,
+        alle Ziele erreicht
+        erste fertige Version
+        Sarmiento Tobias
+
 -----------------------------------------------------
 """
 # Bug: bei erstmaligem einloggen werden protokolle nicht angezeigt! fixed!!!
@@ -290,7 +296,7 @@ def createimgs(b):
     global currdir, entrycounter
     entrycounter[currprotocol][currentry] = entrycounter[currprotocol][currentry] + 1
     # Konvertiert blob = > png
-    os.mkdir(f'./Temp/TempEntry{currentry}')
+    os.mkdir(f'Temp/TempEntry{currentry}')
     file = open(f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png', "wb")
     file.write(base64.b64decode(b))
     # print(blob)
@@ -506,21 +512,27 @@ class DoctorScreen(MDScreen):
             db.cursor.execute(
                 f"SELECT p_id, p_firstname, p_name, p_svnr FROM Patient WHERE p_d_treatingdoctor = {curruserid}")
             patients = db.cursor.fetchall()
+            if not patients:
+                print(self.children[0].children[1].children)
+                self.children[0].children[1].clear_widgets()
+                msg = Factory.NoPatientsMsg()
+                self.children[0].children[1].add_widget(msg)
             # clears widgets
-            widgets = []
-            for widget in self.children[0].children[1].children[0].children[0].children:
-                widgets.append(widget)
-            for wid in widgets:
-                self.children[0].children[1].children[0].children[0].remove_widget(wid)
-            for patient in patients:
-                pat = PatientSwipeItem(
-                    currpat=int(patient[0]),
-                    firstn=str(patient[1]),
-                    lastn=str(patient[2]),
-                    svnr=str(patient[3]),
-                    # on_touch_down=self.on_click_patient(self)
-                )
-                self.children[0].children[1].children[0].add_widget(pat)
+            else:
+                widgets = []
+                for widget in self.children[0].children[1].children[0].children[0].children:
+                    widgets.append(widget)
+                for wid in widgets:
+                    self.children[0].children[1].children[0].children[0].remove_widget(wid)
+                for patient in patients:
+                    pat = PatientSwipeItem(
+                        currpat=int(patient[0]),
+                        firstn=str(patient[1]),
+                        lastn=str(patient[2]),
+                        svnr=str(patient[3]),
+                        # on_touch_down=self.on_click_patient(self)
+                    )
+                    self.children[0].children[1].children[0].add_widget(pat)
             isprinted = True
 
     def on_click_patient(self, widget):
@@ -629,6 +641,13 @@ class ProfileScreen(Screen):
             f"SELECT p_firstname, p_name, p_svnr, p_birthdate, p_allergies, p_preconditions, p_medications, p_d_treatingdoctor FROM Patient WHERE p_id = {curruserid}")
         currpat = db.cursor.fetchone()
         screen = self.children[0].children[1].children[0]
+        if App.get_running_app().isdoctor or App.get_running_app().istreating:
+            self.children[0].remove_widget(self.children[0].children[2])
+            logo = Factory.LogoTopBar()
+            self.children[0].add_widget(logo, index=2)
+            #logo = Factory.LogoTopBar()
+            #self.children[0].children[0] = logo
+        #print(self.children[0].children)
         # for value, box in zip(currpat, screen.ids):
         #    if value is not None:
         #        screen.ids.box.text = str(value)
@@ -770,18 +789,27 @@ class EntryScreen(Screen):
         print(entrycounter)
         # setzt foto
         if entry[3] is not None:
+            #print(f'Temp/TempEntry{currentry}')
             if os.path.exists(f'Temp/TempEntry{currentry}'):
                 for f in os.listdir(f'Temp/TempEntry{currentry}'):
                     os.remove(os.path.join(f'Temp/TempEntry{currentry}', f))
                 os.rmdir(f'Temp/TempEntry{currentry}')
             createimgs(entry[3])
+            #with Image.open(f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png') as img:
+            #    width, height = img.size
+            #tablist[0].children[1].width = width
+            #tablist[0].children[1].height = height
             tablist[0].children[1].background_normal = f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png'
             tablist[0].children[1].background_down = f'Temp/TempEntry{currentry}/tempimgdb_down{entrycounter[currprotocol][currentry]}.png'
             tablist[0].children[1].background_disabled_normal = f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png'
             tablist[0].children[1].background_disabled_down = f'Temp/TempEntry{currentry}/tempimgdb_down{entrycounter[currprotocol][currentry]}.png'
             # self.children[0].children[0].children[0].children[2].background_normal = f'Temp/TempEntry{currentry}/tempimgdb.png'
         else:
-            os.mkdir(f'./Temp/TempEntry{currentry}')
+            if os.path.exists(f'Temp/TempEntry{currentry}'):
+                for f in os.listdir(f'Temp/TempEntry{currentry}'):
+                    os.remove(os.path.join(f'Temp/TempEntry{currentry}', f))
+                os.rmdir(f'Temp/TempEntry{currentry}')
+            os.mkdir(f'Temp/TempEntry{currentry}')
             tablist[0].children[
                 1].background_normal = 'Images/new_pic_DermoPEL.png'
             tablist[0].children[
@@ -911,8 +939,8 @@ class EntryScreen(Screen):
 class Entry(BoxLayout):
     def on_currentryprint(self, widget):
         global curruserid, currprotocol, currentry
-        # App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
-        # App.get_running_app().root.ids.DermoScreens.current = 'camerascreen'
+        App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
+        App.get_running_app().root.ids.DermoScreens.current = 'camerascreen'
         Factory.ConfirmPicture().open()
         """
         db = Database(host="localhost", user="root", passwd="", database="dermopel_db")
@@ -936,17 +964,19 @@ class LimitInput(TextInput):
 
 
 class CameraScreen(Screen):
-    # def on_pre_enter(self, *args):
-    # self.children[0].children[1].play = True
+    def on_pre_enter(self, *args):
+        self.children[0].children[1].play = True
 
-    # def on_leave(self, *args):
-    # self.children[0].children[1].play = False
+    def on_leave(self, *args):
+        self.children[0].children[1].play = False
     pass
 
 
 class EntryCamera(BoxLayout):
     def on_takepicture(self, widget):
-        self.ids.entrycam.export_to_png(f'Temp/selfie{currimg}.png')
+        global entrycounter
+        entrycounter[currprotocol][currentry] = entrycounter[currprotocol][currentry] + 1
+        self.ids.entrycam.export_to_png(f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png')
         Factory.ConfirmPicture().open()
 
 
@@ -1029,14 +1059,18 @@ class EntryBar(BoxLayout):
     def on_save_release(self, widget):
         # parent => parent => BoxLayout => EntryBottom => TabsMain => TabsCarousel => Tab1 => PictureTab => BoxLayout => Textinput
         #   self.parent.parent.children[0].children[1].children[1].children[0].children[0].children[0].children[0].children[1]
-        currtab = self.parent.parent.children[0].children[1].children[1].children[0].children[0].children[0]
+        #self.parent.parent.children[0].children[1].children[1].children[0].children[0].children[0]
+        tabs = self.parent.parent.children[0].children[1].get_slides()
+        tabs[0].on_picture_update()
+        tabs[1].on_state_update()
+        tabs[2].on_notes_update()
         # Ueberprueft, ob currtab eine instanz von einem Tab ist.
-        if isinstance(currtab, PictureTab):
-            currtab.on_picture_update()
-        elif isinstance(currtab, PainTab):
-            currtab.on_state_update()
-        elif isinstance(currtab, NotesTab):
-            currtab.on_notes_update()
+        #if isinstance(currtab, PictureTab):
+        #    currtab.on_picture_update()
+        #elif isinstance(currtab, PainTab):
+        #    currtab.on_state_update()
+        #elif isinstance(currtab, NotesTab):
+        #    currtab.on_notes_update()
 
 
 class PictureTab(BoxLayout, MDTabsBase):
@@ -1355,16 +1389,19 @@ class ChoosePicture(Popup):
         self.file_manager.manager_open = False
         self.file_manager.close()
 
+    def on_takepic(self, widget):
+        App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
+        App.get_running_app().root.ids.DermoScreens.current = 'camerascreen'
 
 class ConfirmPicture(Popup):
-    # def on_open(self):
-    # self.ids.entryimg.source = f'Temp/selfie{currimg}.png'
+    def on_open(self):
+        self.ids.entryimg.source = f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png'
 
     def on_confirm_release(self, widget):
         # DB behaviour!
         db = Database()
         #        imgblob = convertdata(f'Temp/selfie{currimg}.png')
-        imgblob = bytearray(convertdata(f'Temp/selfie{currimg}.png'))
+        imgblob = bytearray(convertdata(f'Temp/TempEntry{currentry}/tempimgdb{entrycounter[currprotocol][currentry]}.png'))
         # query = "UPDATE entry SET e_picture = %s WHERE e_id = %s"
         # values = (imgblob, currentry)
         # db.cursor.execute(query, values)
@@ -1376,10 +1413,10 @@ class ConfirmPicture(Popup):
         App.get_running_app().root.ids.DermoScreens.current = 'entryscreen'
         self.dismiss()
 
-    def on_dismiss(self):
-        global currimg
+    #def on_dismiss(self):
+        #global currimg
         # os.remove(f'Temp/selfie{currimg}.png')
-        currimg = currimg + 1
+        #currimg = currimg + 1
 
 
 class LoginOrSignUpError(Popup):
@@ -1539,6 +1576,7 @@ class DermoPELApp(MDApp):
     lightblue = ColorProperty([.8, .95, 1, 1])
     greyblue = ColorProperty([.65, .78, .88, 1])
     grey = ColorProperty([.92, .92, .92, 1])
+    platform = StringProperty(platform)
 
     def on_resize(self, win, width, height):
         # print(str(width) + ' ' + str(height))

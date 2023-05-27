@@ -132,6 +132,31 @@
         Sarmiento Tobias
 
     DermoPEL Version 21:
+        git repo initialized
+        tempfile-struktur geändert
+        Sarmiento Tobias
+
+    DermoPEL Version 21.1:
+        Settingsscreen zu Doctorsearch geändert
+        Sarmiento Tobias
+
+    DermoPEL Version 21.2:
+        Counter und Liste für Fotos hinzugefügt,
+        FEHLERHAFT! Fotos werden weiß angezeigt
+        Sarmiento tobias
+
+    DermoPEL Version 21.3:
+        Bilder behoben, funktionieren nun.
+        Sarmiento Tobias
+
+    DermoPEL Version 21.4:
+        Tutorial angefangen
+        Sarmiento Tobias
+
+    DermoPEL Version 22:
+        Tutorial und Kamera fertiggestellt,
+        alle Ziele erreicht
+        erste fertige Version
         Sarmiento Tobias
 
 -----------------------------------------------------
