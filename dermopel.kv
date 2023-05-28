@@ -180,20 +180,20 @@ Display:
 #-----------------------------------------------------
 #Content
 #-----------------------------------------------------
-<EntryCamera>
-    orientation: 'vertical'
-    padding: "10dp"
-    Camera:
-        id: entrycam
-        resolution: (1080, 1440) if app.platform == 'android' else (1440, 1080)
-    Button:
-        size_hint: None, None
-        size: "100dp", "100dp"
-        pos_hint: {"center_x": .5}
-        border: (0, 0, 0, 0)
-        background_normal: "Images/New_Protocoll_Down_DermoPEL.png"
-        background_down: "Images/New_Protocoll_DermoPEL.png"
-        on_release: root.on_takepicture(self)
+#<EntryCamera>
+#    orientation: 'vertical'
+#    padding: "10dp"
+#    Camera:
+#        id: entrycam
+#        resolution: (1080, 1440) if app.platform == 'android' else (1440, 1080)
+#    Button:
+#        size_hint: None, None
+#        size: "100dp", "100dp"
+#        pos_hint: {"center_x": .5}
+#        border: (0, 0, 0, 0)
+ #       background_normal: "Images/New_Protocoll_Down_DermoPEL.png"
+##        background_down: "Images/New_Protocoll_DermoPEL.png"
+ #       on_release: root.on_takepicture(self)
 
 <Welcome@BoxLayout>
     #Hier kommt die Begrüßungsnachricht, welche bei öffnen der App aufgerufen wird.
