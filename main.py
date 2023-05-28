@@ -939,8 +939,8 @@ class EntryScreen(Screen):
 class Entry(BoxLayout):
     def on_currentryprint(self, widget):
         global curruserid, currprotocol, currentry
-        #App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
-        #App.get_running_app().root.ids.DermoScreens.current = 'camerascreen'
+        App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
+        App.get_running_app().root.ids.DermoScreens.current = 'camerascreen'
         Factory.ConfirmPicture().open()
         """
         db = Database(host="localhost", user="root", passwd="", database="dermopel_db")
@@ -964,11 +964,11 @@ class LimitInput(TextInput):
 
 
 class CameraScreen(Screen):
-    #def on_pre_enter(self, *args):
-    #    self.children[0].children[1].play = True
+    def on_pre_enter(self, *args):
+        self.children[0].children[1].play = True
 
-    #def on_leave(self, *args):
-    #    self.children[0].children[1].play = False
+    def on_leave(self, *args):
+        self.children[0].children[1].play = False
     pass
 
 
@@ -1389,10 +1389,9 @@ class ChoosePicture(Popup):
         self.file_manager.manager_open = False
         self.file_manager.close()
 
-
-    #def on_takepic(self, widget):
-        #App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
-        #App.get_running_app().root.ids.DermoScreens.current = 'camerascreen'
+    def on_takepic(self, widget):
+        App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
+        App.get_running_app().root.ids.DermoScreens.current = 'camerascreen'
 
 class ConfirmPicture(Popup):
     def on_open(self):
