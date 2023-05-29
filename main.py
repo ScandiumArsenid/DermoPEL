@@ -272,10 +272,10 @@ store = JsonStore('login.json')
 class Database:
     def __init__(self):
         self.conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            passwd="",
-            database="dermopel_db"
+            host="e121967-mysql.services.easyname.eu",
+            user="u187500db1",
+            passwd="Dermo123",
+            database="u187500db1"
         )
         self.cursor = self.conn.cursor()
 
