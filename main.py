@@ -165,6 +165,10 @@
         erste fertige Version
         Sarmiento Tobias
 
+    DermoPEL Version 23:
+        Bugfixes
+        Sarmiento Tobias
+
 -----------------------------------------------------
 """
 # Bug: bei erstmaligem einloggen werden protokolle nicht angezeigt! fixed!!!
@@ -706,7 +710,7 @@ class ProfileScreen(Screen):
 class PatientData(BoxLayout):
     def on_date_release(self, widget):
         # DatePicker
-        if self.ids.birthdatebox.text is not '':
+        if self.ids.birthdatebox.text != '':
             dateof = datetime.strptime(self.ids.birthdatebox.text, '%d. %m. %Y')
         else:
             dateof = datetime.today()
@@ -1047,7 +1051,7 @@ class ProfileBar(BoxLayout):
         currdoc = 0
         currpatient = 0
         userprotocol = 0
-        entrycounter = 0
+        entrycounter = {}
         App.get_running_app().isdoctor = False
         App.get_running_app().istreating = False
         App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
@@ -1292,7 +1296,7 @@ class Entrys(Popup):
         self.dismiss()
 
     def on_new_entry_release(self, widget):
-        global currentry
+        global currentry, entrycounter
         tempid = 0
         db = Database()
         db.cursor.execute(
@@ -1304,6 +1308,7 @@ class Entrys(Popup):
             if entrys[0] > tempid:
                 tempid = entrys[0]
         currentry = tempid
+        entrycounter[currprotocol].update({tempid: 0})
         App.get_running_app().root.ids.DermoScreens.transition = RiseInTransition()
         App.get_running_app().root.ids.DermoScreens.current = 'entryscreen'
         db.close()
@@ -1323,7 +1328,7 @@ class Entrys(Popup):
 
 class NewProtocoll(Popup):
     def on_new_protocol_release(self, widget):
-        global curruserid, currprotocol
+        global curruserid, currprotocol, entrycounter
         db = Database()
         if len(self.ids.new_protocol_namebox.text) <= 13:
             db.cursor.execute(f"INSERT INTO Protocol (pr_p_id, pr_name) VALUES ({curruserid}, %s)",
@@ -1331,6 +1336,7 @@ class NewProtocoll(Popup):
             db.cursor.execute("SELECT pr_id FROM Protocol WHERE pr_name = %s;", (self.ids.new_protocol_namebox.text,))
             currprotocol = db.cursor.fetchall()[0][0]
             db.conn.commit()
+            entrycounter
             db.close()
         else:
             protocollenerror = Factory.LoginOrSignUpError()
@@ -1370,7 +1376,7 @@ class ChoosePicture(Popup):
             os.remove(os.path.join(f'Temp/TempEntry{currentry}', f))
         os.rmdir(f'Temp/TempEntry{currentry}')
         imgblob = bytearray(convertdata((path)))
-        query = f"UPDATE entry SET e_picture = %s WHERE e_id = {currentry}"
+        query = f"UPDATE Entry SET e_picture = %s WHERE e_id = {currentry}"
         values = (imgblob,)
         db.cursor.execute(query, values)
         db.conn.commit()
@@ -1405,7 +1411,7 @@ class ConfirmPicture(Popup):
         # query = "UPDATE entry SET e_picture = %s WHERE e_id = %s"
         # values = (imgblob, currentry)
         # db.cursor.execute(query, values)
-        query = f"UPDATE entry SET e_picture = %s WHERE e_id = {currentry}"
+        query = f"UPDATE Entry SET e_picture = %s WHERE e_id = {currentry}"
         values = (imgblob,)
         db.cursor.execute(query, values)
         db.conn.commit()
@@ -1707,6 +1713,13 @@ class DermoPELApp(MDApp):
 
 
 if __name__ == '__main__':
+    if os.path.exists('Temp'):
+        for f in os.listdir('Temp'):
+            for d in os.listdir('Temp/' + f):
+                os.remove(os.path.join('Temp', f, d))
+            os.rmdir(os.path.join('Temp', f))
+        os.rmdir('Temp')
+    os.mkdir('Temp')
     DermoPELApp().run()
     for f in os.listdir('Temp'):
         for d in os.listdir('Temp/' + f):
